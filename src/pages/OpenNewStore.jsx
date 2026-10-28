@@ -89,14 +89,17 @@ export default function OpenNewStore() {
     {/* 💡 關鍵修改點：在這裡加上 px-4 讓左右內縮，mt-4 讓上下有呼吸空間，max-w-2xl mx-auto 限制大螢幕寬度 */}
     <div className="px-4 mt-4 max-w-2xl mx-auto">
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
-        <h2 className="text-base font-bold text-slate-800 mb-4 whitespace-pre-line">說明文件(未完成){"\n"}目前商店位置請選【榮星攤販集中場】{"\n"}商店名稱 7個中文字內</h2>
+        <h2 className="text-base font-bold text-slate-800 mb-4">說明文件(未完成)</h2>
+        <p className="block text-xs font-bold text-slate-700 mb-1 whitespace-pre-line">實體商店 商店位置目前只能選【榮星攤販集中場】{"\n"}
+          線上電商 請選 【香水】 或 【精油】　　商店名稱 7個中文字內{"\n"}Line鏈結 不能寫LineID 或 @官方帳號{"\n"}　{"\n"}
+        </p>
         <form onSubmit={handleCreateNewStore} className="space-y-3">
 
         <div className="flex items-center gap-4">
-            <div className="w-1/3">{/* 左邊：文字標題 */}
+            <div className="w-1/3">{/* 左邊：文字標題 (需更改為 切換標籤)*/}
                 <label className="block text-sm font-bold text-slate-700">商店的真實位置</label>
             </div>
-            <div className="flex-1">{/* 右邊：下拉選單 */}
+            <div className="flex-1">{/* 右邊：下拉選單 (根據標籤 會有不同的下拉選單)*/}
             <select
                 value={newStoreMarket}
                 onChange={(e) => {setNewStoreMarket(e.target.value); 
@@ -160,8 +163,8 @@ export default function OpenNewStore() {
             <input type="text" value={storeOpenTime} onChange={(e) => setStoreOpenTime(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="輸入商店的營業時間..." />
           </div>
           <div className="flex-1"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">Line</label>
-            <input type="text" value={storeLine} onChange={(e) => setStoreLine(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="LineID 或 官方帳號..." />
+            <label className="block text-xs font-bold text-slate-700 mb-1">Line鏈結</label>
+            <input type="text" value={storeLine} onChange={(e) => setStoreLine(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="必須填寫 http://......" />
           </div>
         </div>
           <button type="submit" className="w-full rounded-lg bg-brand-600 py-2.5 text-sm font-bold text-white shadow-md">確定創建新商店</button>

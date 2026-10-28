@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import OpenNewStore from './pages/OpenNewStore.jsx'
 import StoreManage from './pages/StoreManage/index.jsx'
 import StoreManagePhoto from './pages/StoreManagePhoto/index.jsx'
+import { Navbar } from './components/Navbar'; // 💡 用花括號引入拆好的 Navbar
 
 import ProtectedRoute from './components/ProtectedRoute' // 👈 引入剛剛寫好的守護組件
 
@@ -16,9 +17,14 @@ function App() {
     // <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
 
     // 修改後：
-  <AuthProvider>
-    <div className="min-h-dvh bg-slate-50 text-slate-900 font-sans overflow-x-hidden">{/* overflow-x-hidden 順便鎖死橫向，防止手機畫面左右亂晃 */}
-      <Routes>
+  <AuthProvider> {/* overflow-x-hidden 順便鎖死橫向，防止手機畫面左右亂晃 */}
+    {/* <div className="min-h-dvh bg-slate-50 text-slate-900 font-sans overflow-x-hidden"> */}
+  {/* <div className="w-screen h-[100dvh] overflow-hidden flex flex-col bg-slate-50 font-sans"> */}
+  <div className="w-screen h-[100dvh] flex flex-col bg-slate-50 font-sans overflow-hidden">
+    <Navbar />
+    {/* <div className="flex-1 min-h-dvh bg-slate-50 text-slate-900 font-sans overflow-x-hidden overflow-y-auto"> */}
+    <div className="flex-1 min-h-0 bg-slate-50 text-slate-900 overflow-y-auto">
+        <Routes>
         <Route path="/"                   element={<Navigate to="/login" replace />} />{/* 預設首頁直接導向登入頁 */}
         <Route path="/login"              element={<Login />} />{/* 登入頁面：不需要保護，任何人都可以看 */}
         <Route path="/reset-password"     element={<ResetPassword />}/>
@@ -46,6 +52,7 @@ function App() {
         
       </Routes>
     </div>
+  </div>
   </AuthProvider>
   )
 }

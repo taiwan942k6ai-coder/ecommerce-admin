@@ -54,11 +54,14 @@ export default function Login() {
 
   return (
     // <div className="min-h-screen bg-gray-50 flex flex-col justify-center px-4">
-    <div className="flex h-dvh w-full items-center justify-center p-4 bg-slate-50 overflow-hidden">
-      {/* 用 h-dvh 頂天立地，用 overflow-hidden 拔掉滾動條 */} {/* 底下登入表單卡片... */}
-      
+    <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden">
+      {/* 用 h-dvh 頂天立地，用 overflow-hidden 拔掉滾動條  items-center改flex-col*/} {/* 底下登入表單卡片... */}
+      {/* <!-- 2. 上方隱形推手（佔 2 等份空間） --> */}
+      <div className="flex-[2]" />
       <div className="w-full max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">市集小幫手  後台管理系統</h2>
+        {/* <img className="" src="/市集小幫手.jpg"  alt="市集小幫手 LOGO" style={{ width: '200px', height: 'auto' }} /> */}
+        {/* <img className="mx-auto block w-[200px] h-auto" src="/市集小幫手.jpg" alt="市集小幫手 LOGO" /> */}
+        <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">攤販後台管理系統</h2>
         <p className="text-sm text-gray-500 text-center mb-6 whitespace-pre-line">註冊後，可直接創建商店。{"\n"}需等48hr，由管理者審核後才會出現在 用戶版APP<br /></p>
 
         {error && <div className="bg-red-50 text-red-500 p-3 rounded-lg text-sm mb-4">{error}</div>}
@@ -89,6 +92,7 @@ export default function Login() {
           </button>
         </form>
       </div>
+      <div className="flex-[3]" />
     </div>
   )
 }
