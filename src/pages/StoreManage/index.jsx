@@ -66,12 +66,12 @@ export default function StoreManage() {
   }
 
   return (
-    <div className="pb-24">
+    <div className="pb-20">
       {/* 頂部不變的導覽列 */}
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-xs">
-        <button onClick={() => navigate('/dashboard')} className="text-sm font-medium text-slate-600">← 返回總覽</button>
+        <div className="w-[68px]"></div> 
         <h1 className="text-base font-bold text-slate-800 truncate max-w-[200px]">{store?.name}</h1>
-        <div className="w-12"></div>
+        <button onClick={() => navigate('/dashboard')} className="text-sm font-medium text-slate-600">← 返回總覽</button>
       </header>
 
       {/* 分頁 Tab 切換 */}
@@ -93,7 +93,7 @@ export default function StoreManage() {
           <ProductList storeName={storeName} products={products} setProducts={setProducts} onAddClick={() => setIsModalOpen(true)} onPriceUpdated={fetchStoreData} uid={store?.spuid}/>
         ) : (
           <StoreSettings storeName={storeName} initialName={store?.name} initialDesc={store?.introduce} initialType={store?.sp_type}
-              initialPOC={store?.poc} initialPhone={store?.phone} initialOpenTime={store?.open_time} initialLine={store?.line} onInfoUpdated={fetchStoreData}
+              initialPOC={store?.poc} initialPhone={store?.phone} initialOpenTime={store?.open_time} initialLine={store?.line} initialOther={store?.other} onInfoUpdated={fetchStoreData}
               initialTodayImageUpdateAt={store?.today_image_update_at} isTodayImageOpen={isTodayImageOpen} onAddClick={() => setIsTodayImageOpen(true)} uid={store?.spuid}/>
         )}
       </main>

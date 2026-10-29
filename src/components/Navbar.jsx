@@ -7,7 +7,7 @@ export function Navbar() {
         onClick={() => {  }} 
       >
       <img  src="/市集小幫手.jpg"  alt="市集小幫手 LOGO" 
-            style={{ width: '200px', height: 'auto' }} />
+            style={{ width: '100px', height: 'auto' }} />
       </div>
     </nav>
   );

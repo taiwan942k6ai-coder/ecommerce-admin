@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { supabase } from '../../supabaseClient'
 import { useNavigate } from 'react-router-dom'
 
-export default function StoreSettings({ storeName, initialName, initialType, initialDesc, initialPOC, initialPhone, initialOpenTime, initialLine, initialTodayImageUpdateAt,onInfoUpdated, isTodayImageOpen, onAddClick, uid}) {
+export default function StoreSettings({ storeName, initialName, initialType, initialDesc, initialPOC, initialPhone, initialOpenTime, initialLine, initialOther, initialTodayImageUpdateAt, onInfoUpdated, isTodayImageOpen, onAddClick, uid}) {
   const [thisStoreName, setThisStoreName] = useState(initialName || '')
   const [storeType, setStoreType] = useState(initialType || '')
   const [storeDesc, setStoreDesc] = useState(initialDesc || '')
   const [storePOC, setStorePOC] = useState(initialPOC || '')
   const [storePhone, setStorePhone] = useState(initialPhone || '')
-  const [storeLine, setStoreLine] = useState(initialLine || '')
   const [storeOpenTime, setStoreOpenTime] = useState(initialOpenTime || '')
+  const [storeLine, setStoreLine] = useState(initialLine || '')
+  const [storeOther, setStoreOther] = useState(initialOther || '') 
   // const [todayImageUpdateAt, setTodayImageUpdateAt] = useState(initialTodayImageUpdateAt)
 
   const todayUTCString = new Date().toISOString().split('T')[0];
@@ -18,7 +19,7 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
   const handleUpdateStoreInfo = async (e) => {
     e.preventDefault()
     try {//eq('name', storeName)應該改成uid，但我還在思考要不要讓攤販換名稱(總覺得不能換比較好)
-      const { error } = await supabase.from('shops').update({ name: thisStoreName, introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine }).eq('spuid', uid)
+      const { error } = await supabase.from('shops').update({ name: thisStoreName, introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine, other: storeOther }).eq('spuid', uid)
       if (error) throw error
       alert(thisStoreName+' 商店資訊更新成功！'),
       onInfoUpdated(thisStoreName)
@@ -40,7 +41,6 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
         )}   {/*沒加button 預設是submit  會觸發onSubmit*/}
         <button type="button" onClick={onAddClick} className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-brand-700 active:scale-95 transition-all">+ 更新今日現場照片</button>
       </div>
-      <div>　</div>
 
 
       <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
@@ -49,7 +49,7 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
           <input type="text" required value={thisStoreName} onChange={(e) => setThisStoreName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
         </div>
         <div className="flex-1"> 
-          <label className="block text-xs font-bold text-slate-700 mb-1">商店型態(不可更改)</label>
+          <label className="block text-xs font-bold text-slate-700 mb-1">主商品型態(不可更改)</label>
           <input type="text" readOnly value={storeType} onChange={(e) => setStoreType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
         </div>
       </div>
@@ -81,6 +81,10 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
           <input type="text" value={storeLine} onChange={(e) => setStoreLine(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="聯絡人LineID 或 Line官方帳號..." />
         </div>
       </div>
+
+        <label className="block text-xs font-bold text-slate-700 mb-1">其他聯絡資訊　(實體攤販：攤號)　(線上電商：官網網址)</label>
+        <input type="text" value={storeOther} onChange={(e) => setStoreOther(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="能讓客戶找到你的方式..." />
+
         <button type="submit" className="w-full rounded-lg bg-brand-600 py-2.5 text-sm font-bold text-white shadow-md">儲存設定</button>
       </form>
     </div>

@@ -57,7 +57,7 @@ export default function Login() {
     <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden">
       {/* 用 h-dvh 頂天立地，用 overflow-hidden 拔掉滾動條  items-center改flex-col*/} {/* 底下登入表單卡片... */}
       {/* <!-- 2. 上方隱形推手（佔 2 等份空間） --> */}
-      <div className="flex-[2]" />
+      <div className="flex-[1]" />
       <div className="w-full max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         {/* <img className="" src="/市集小幫手.jpg"  alt="市集小幫手 LOGO" style={{ width: '200px', height: 'auto' }} /> */}
         {/* <img className="mx-auto block w-[200px] h-auto" src="/市集小幫手.jpg" alt="市集小幫手 LOGO" /> */}

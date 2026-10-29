@@ -23,7 +23,7 @@ function App() {
   <div className="w-screen h-[100dvh] flex flex-col bg-slate-50 font-sans overflow-hidden">
     <Navbar />
     {/* <div className="flex-1 min-h-dvh bg-slate-50 text-slate-900 font-sans overflow-x-hidden overflow-y-auto"> */}
-    <div className="flex-1 min-h-0 bg-slate-50 text-slate-900 overflow-y-auto">
+    <div className="flex-1 min-h-0 bg-slate-50 text-slate-900 overflow-y-auto flex flex-col justify-start">
         <Routes>
         <Route path="/"                   element={<Navigate to="/login" replace />} />{/* 預設首頁直接導向登入頁 */}
         <Route path="/login"              element={<Login />} />{/* 登入頁面：不需要保護，任何人都可以看 */}

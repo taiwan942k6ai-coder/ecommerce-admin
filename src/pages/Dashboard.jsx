@@ -46,16 +46,18 @@ export default function Dashboard() {
 
 
   return (
+        // <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden"></div>
+    // <div className="min-h-screen bg-gray-50 pb-12">
     <div className="min-h-screen bg-gray-50 pb-12">
       {/* 行動裝置頂部列 */}
       <div className="bg-white border-b border-gray-100 px-4 py-4 sticky top-0 flex justify-between items-center z-10">
-        <h1 className="text-xl font-bold text-gray-900">我的商店總覽</h1>
+        <h1 className="text-xl font-bold text-gray-900">　我的商店總覽</h1>
         <button onClick={handleLogout} className="p-2 text-gray-500 hover:text-red-500 flex items-center gap-1">
           <span className="text-sm font-medium">登出系統</span><LogOut size={20} />
         </button>
       </div>
 
-      <div className="max-w-md mx-auto px-4 mt-6">
+      <div className="max-w-md mx-auto px-4 mt-6 pb-24">
         <div className="flex justify-between items-center mb-4">
           <p className="text-sm text-gray-500">共 {stores.length} 間商店</p>
           <button onClick={() => navigate(`/open-new-store`)} className="flex items-center text-sm font-medium text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg">
