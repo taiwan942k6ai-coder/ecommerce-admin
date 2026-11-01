@@ -127,7 +127,23 @@ export default function Dashboard() {
 
 
 
-
+// Delete.jsx:52 註銷失敗: 
+// {code: '23503', details: 'Key (id)=(8dce59bb-bdba-40ed-8629-d1f7ac9c3091) is still referenced from table "profiles".', hint: null, message: 'update or delete on table "users" violates foreign…raint "profiles_user_id_fkey" on table "profiles"'}
+// code
+// : 
+// "23503"
+// details
+// : 
+// "Key (id)=(8dce59bb-bdba-40ed-8629-d1f7ac9c3091) is still referenced from table \"profiles\"."
+// hint
+// : 
+// null
+// message
+// : 
+// "update or delete on table \"users\" violates foreign key constraint \"profiles_user_id_fkey\" on table \"profiles\""
+// [[Prototype]]
+// : 
+// Object
 
 
 
@@ -146,10 +162,10 @@ export default function Dashboard() {
           個人資訊
         </button>
         <button onClick={() => setActiveTab('platform')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'products' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
-          帳戶細節(目前沒有))
+          帳戶細節(還沒做)
         </button>
         <button onClick={() => setActiveTab('delete')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'ai' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
-          刪除商店、註銷帳戶
+          刪除 與 註銷
         </button>
       </div>
 

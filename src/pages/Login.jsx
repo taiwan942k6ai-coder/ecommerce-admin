@@ -73,6 +73,88 @@ const handleSignUp = async (e) => {
   }
 }
 
+
+
+return (
+  <div className="flex flex-col h-dvh w-full items-center justify-center p-4 bg-slate-50 overflow-hidden">
+    {/* 2. 上方隱形推手（佔 1 等份空間） */}
+    <div className="flex-[1]" />
+
+    <div className="w-full max-w-md mx-auto bg-white p-8 rounded-2xl shadow-md border border-slate-100">
+      <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">攤販後台管理系統</h2>
+      <p className="text-sm text-gray-500 text-center mb-6 whitespace-pre-line">
+        註冊後，可直接創建商店。{"\n"}
+        需等 48hr，由管理者審核後才會出現在用戶版 APP
+      </p>
+
+      {error && <div className="bg-red-50 text-red-500 p-3 rounded-xl text-sm mb-4 border border-red-100">{error}</div>}
+      {message && <div className="bg-green-50 text-green-600 p-3 rounded-xl text-sm mb-4 border border-green-100">{message}</div>}
+
+      <form onSubmit={handleLogin} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">註冊信箱</label>
+          <input 
+            type="email" 
+            value={email} 
+            onChange={e => setEmail(e.target.value)} 
+            required 
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-base transition-all" 
+            placeholder="name@example.com" 
+            autoComplete="email"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">密碼</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)} 
+            required 
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-base transition-all" 
+            placeholder="••••••••" 
+            autoComplete="current-password"
+          />
+        </div>
+
+        {/* 忘記密碼與註冊按鈕區塊 - 調整為精緻的文字連結 */}
+        <div className="flex justify-between items-center px-0.5 text-sm">
+          <button 
+            type="button" 
+            onClick={handleForgotPassword} 
+            disabled={loading} 
+            className="text-gray-500 hover:text-blue-600 hover:underline focus:outline-none transition-colors disabled:opacity-50"
+          >
+            忘記密碼？
+          </button>
+          
+          <button 
+            type="button" 
+            onClick={handleSignUp} 
+            disabled={loading} 
+            className="font-medium text-blue-600 hover:text-blue-700 hover:underline focus:outline-none transition-colors disabled:opacity-50"
+          >
+            註冊新帳號
+          </button>
+        </div>
+
+        <button 
+          type="submit" 
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition duration-200 text-base shadow-sm mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          登入市集後台
+        </button>
+      </form>
+    </div>
+
+    {/* 下方隱形推手（佔 3 等份空間） */}
+    <div className="flex-[3]" />
+  </div>
+);
+
+
+
+
   return (
     // <div className="min-h-screen bg-gray-50 flex flex-col justify-center px-4">
     <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden">
