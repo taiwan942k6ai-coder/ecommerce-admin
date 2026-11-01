@@ -87,7 +87,7 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-900 text-base">{store.name}</h3>
-                    <p className="text-xs text-gray-400 line-clamp-1">{store.mk_name || '暫無描述'}</p>
+                    <p className="text-xs text-gray-400 line-clamp-1">{store.mk_name || '所屬市集消失了'}</p>
                   </div>
 
                           {/* 商店圖片 */}

@@ -5,8 +5,7 @@ export default function BottomNav() {
   const location = useLocation()
 
   // 判斷目前網址在老家，用來高亮顯示對應的按鈕
-  const isActive = (path) => {
-    // 如果是 store 頁面，因為後面帶有 ID，我們用開頭來判斷
+  const isActive = (path) => {// 如果是 store 頁面，因為後面帶有 ID，我們用開頭來判斷
     if (path === '/store' && location.pathname.startsWith('/store')) return true
     return location.pathname === path
   }
@@ -22,15 +21,23 @@ export default function BottomNav() {
         <button
           onClick={() => navigate('/dashboard')}
           className={`flex flex-col items-center justify-center w-20 h-full transition-colors active:scale-95 ${
-            isActive('/dashboard') ? 'text-brand-600 font-semibold' : 'text-slate-400'
-          }`}
-        >
+            isActive('/dashboard') || location.pathname.startsWith('/store') ? 'text-brand-600 font-semibold' : 'text-slate-400'}`}>
           <span className="text-xl mb-0.5">🏪</span>
           <span className="text-[11px]">商店管理</span>
         </button>
 
+
         {/* 按鈕 2：目前商店 (若沒進入特定商店則導回總覽) */}
         <button
+          onClick={() => {navigate('/settings')          }}
+          className={`flex flex-col items-center justify-center w-20 h-full transition-colors active:scale-95 ${
+            isActive('/settings') ? 'text-brand-600 font-semibold' : 'text-slate-400'}`}>
+          <span className="text-xl mb-0.5">📦</span>
+          <span className="text-[11px]">帳戶管理</span>
+        </button>
+
+
+        {/* <button
           onClick={() => {
             // 如果本來就在某個商店頁面就不動，否則去總覽
             if (!location.pathname.startsWith('/store')) {
@@ -43,7 +50,7 @@ export default function BottomNav() {
         >
           <span className="text-xl mb-0.5">📦</span>
           <span className="text-[11px]">帳戶管理</span>
-        </button>
+        </button> */}
 
         {/* 按鈕 3：登出 / 帳戶設定 */}
         <button

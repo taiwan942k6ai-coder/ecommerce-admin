@@ -20,8 +20,7 @@ export default function Login() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })    
 
     setLoading(false)
-    if (error) {
-      setError(error.message)
+    if (error) {  setError(error.message)
     } else {    // 成功後跳轉至商店總覽頁面
       navigate('/dashboard')
     }
@@ -45,12 +44,34 @@ export default function Login() {
     })
 
     setLoading(false)
-    if (error) {
-      setError(error.message)
+    if (error) { setError(error.message)
     } else {
       setMessage('密碼重設信件已發送！請至您的信箱查看連結。')
     }
   }
+
+
+
+  // 新增：註冊新帳號邏輯
+const handleSignUp = async (e) => {
+  e.preventDefault() // 阻止表單重新整理
+  setError(null)
+  setMessage(null)
+  setLoading(true)
+
+  // 核心：呼叫 Supabase 的 signUp API 創立帳號
+  const { data, error } = await supabase.auth.signUp({ email, password })
+
+  setLoading(false)
+  if (error) {
+    setError(error.message)
+  } else {
+    // 成功註冊後的提示
+    setMessage('註冊成功！已經為您自動登入。')
+    // 如果您在 Supabase 後台已經把 "Confirm Email" 關掉了，這裡可以直接導向後台：
+    setTimeout(() => navigate('/dashboard'), 1500)
+  }
+}
 
   return (
     // <div className="min-h-screen bg-gray-50 flex flex-col justify-center px-4">
@@ -86,10 +107,15 @@ export default function Login() {
           <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition duration-200 text-base shadow-sm">
             登入市集後台
           </button>
+          <div className='flex justify-between items-center mb-4'>
           <button   type="button"       onClick={handleForgotPassword}
                     disabled={loading}  className="text-sm text-blue-600 hover:text-blue-700 hover:underline focus:outline-none disabled:opacity-50">
             忘記密碼？
+          </button>{/* 新增的註冊按鈕 */}
+          <button type="button" onClick={handleSignUp} disabled={loading} className="ml-2 bg-green-500 text-white">
+            註冊新帳號
           </button>
+          </div>
         </form>
       </div>
       <div className="flex-[3]" />

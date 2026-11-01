@@ -7,7 +7,7 @@ import ProductList from './ProductList'
 import StoreSettings from './StoreSettings'
 import AiPlans from './AiPlans'
 import ProductModal from './ProductModal'
-import StoreTodayImage from './StoreTodayImage'
+import StoreTodayImage from './StoreUpdateTodayImage'
 import AiPlanSuggestion from './AiPlanSuggestion'
 import BottomNav from '../../components/BottomNav'
 

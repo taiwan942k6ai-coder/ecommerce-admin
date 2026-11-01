@@ -130,7 +130,7 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none">
             <option value="">請選擇型態...</option>
             {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
-            { console.log("目前要測試的變數是 productTypeArray：", productTypeArray)}
+            {/* { console.log("目前要測試的變數是 productTypeArray：", productTypeArray)} */}
             {Array.isArray(productTypeArray) && productTypeArray.map((type,index) => (
                 <option key={index} value={type}>
                     {type}
