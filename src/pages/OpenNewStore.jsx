@@ -80,7 +80,7 @@ export default function OpenNewStore() {
     )
 
   return (    // <div className="min-h-screen bg-gray-50 pb-12"></div>
-    <div className="h-full bg-gray-50 pb-12">
+    <div className="min-h-screen bg-gray-50">
       {/* 行動裝置頂部列 */}
       <div className="bg-white border-b border-gray-100 px-4 py-4 sticky top-0 flex justify-between items-center z-10">
         <h1 className="text-xl font-bold text-gray-900">建立新商店</h1>
@@ -104,7 +104,7 @@ export default function OpenNewStore() {
       </div>
 
     {/* 💡 關鍵修改點：在這裡加上 px-4 讓左右內縮，mt-4 讓上下有呼吸空間，max-w-2xl mx-auto 限制大螢幕寬度 */}
-    <div className="px-4 mt-4 max-w-2xl mx-auto">
+    <div className="px-4 mt-4 pb-24 max-w-2xl mx-auto">
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
         <h2 className="text-base font-bold text-slate-800 mb-4">說明文件(未完成)</h2>
         <p className="block text-xs font-bold text-slate-700 mb-1 whitespace-pre-line">實體攤販 市集位置目前只能選【榮星攤販集中場】{"\n"}

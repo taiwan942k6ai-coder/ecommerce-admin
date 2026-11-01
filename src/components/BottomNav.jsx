@@ -26,7 +26,7 @@ export default function BottomNav() {
           }`}
         >
           <span className="text-xl mb-0.5">🏪</span>
-          <span className="text-[11px]">商店總覽</span>
+          <span className="text-[11px]">商店管理</span>
         </button>
 
         {/* 按鈕 2：目前商店 (若沒進入特定商店則導回總覽) */}
@@ -42,7 +42,7 @@ export default function BottomNav() {
           }`}
         >
           <span className="text-xl mb-0.5">📦</span>
-          <span className="text-[11px]">商品設定</span>
+          <span className="text-[11px]">帳戶管理</span>
         </button>
 
         {/* 按鈕 3：登出 / 帳戶設定 */}

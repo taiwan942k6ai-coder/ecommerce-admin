@@ -5,8 +5,10 @@ import { supabase } from '../../supabaseClient'
 // 📥 引入拆解出來的子組件
 import ProductList from './ProductList'
 import StoreSettings from './StoreSettings'
+import AiPlans from './AiPlans'
 import ProductModal from './ProductModal'
 import StoreTodayImage from './StoreTodayImage'
+import AiPlanSuggestion from './AiPlanSuggestion'
 import BottomNav from '../../components/BottomNav'
 
 export default function StoreManage() {
@@ -19,7 +21,8 @@ export default function StoreManage() {
   const [loading, setLoading] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isTodayImageOpen, setIsTodayImageOpen] = useState(false)
+  const [isAddTodayImageOpen, setIsAddTodayImageOpen] = useState(false)
+  const [isGiveSuggestionOpen, setIsGiveSuggestionOpen] = useState(false)
 
   const [productTypeArray, setProductTypeArray] = useState([])
 
@@ -83,26 +86,27 @@ export default function StoreManage() {
           人工管理商品 ({products.length})
         </button>
         <button onClick={() => setActiveTab('ai')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'ai' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
-          AI分析_測試
+          未完成項目
+          {/* AI分析_測試 */}
         </button>
       </div>
 
       {/* 內容渲染區 */}
       <main className="px-4 mt-4">
-        {activeTab === 'products' ? (
-          <ProductList storeName={storeName} products={products} setProducts={setProducts} onAddClick={() => setIsModalOpen(true)} onPriceUpdated={fetchStoreData} uid={store?.spuid}/>
-        ) : (
+        {activeTab === 'products' &&  <ProductList storeName={storeName} products={products} setProducts={setProducts} onAddClick={() => setIsModalOpen(true)} onPriceUpdated={fetchStoreData} uid={store?.spuid}/>}
+        {activeTab === 'settings' &&
           <StoreSettings storeName={storeName} initialName={store?.name} initialDesc={store?.introduce} initialType={store?.sp_type}
               initialPOC={store?.poc} initialPhone={store?.phone} initialOpenTime={store?.open_time} initialLine={store?.line} initialOther={store?.other} onInfoUpdated={fetchStoreData}
-              initialTodayImageUpdateAt={store?.today_image_update_at} isTodayImageOpen={isTodayImageOpen} onAddClick={() => setIsTodayImageOpen(true)} uid={store?.spuid}/>
-        )}
+              initialTodayImageUpdateAt={store?.today_image_update_at} isAddTodayImageOpen={isAddTodayImageOpen} onAddClick={() => setIsAddTodayImageOpen(true)} uid={store?.spuid}/>}
+
+        {activeTab === 'ai' &&  <AiPlans onAddClick={() => setIsGiveSuggestionOpen(true)}/>}
+        {/* {activeTab === 'ai' &&  <AiPlans onAddClick={() => setIsModalOpen(true)}/>} */}
       </main>
 
       {/* 獨立彈窗 */}
       <ProductModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} storeName={storeName} onUploaded={fetchStoreData} productTypeArray={productTypeArray} uid={store?.spuid}/>
-
-      <StoreTodayImage isOpen={isTodayImageOpen} onClose={() => setIsTodayImageOpen(false)} storeName={storeName} onTodayPhotoUpdated={fetchStoreData} />
-
+      <StoreTodayImage isOpen={isAddTodayImageOpen} onClose={() => setIsAddTodayImageOpen(false)} storeName={storeName} onTodayPhotoUpdated={fetchStoreData} />
+      <AiPlanSuggestion isOpen={isGiveSuggestionOpen} onClose={() => setIsGiveSuggestionOpen(false)} />
       {/* 底部全域導覽 */}
       <BottomNav />
     </div>
