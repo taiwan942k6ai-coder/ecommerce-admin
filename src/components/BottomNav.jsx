@@ -21,7 +21,7 @@ export default function BottomNav() {
         <button
           onClick={() => navigate('/dashboard')}
           className={`flex flex-col items-center justify-center w-20 h-full transition-colors active:scale-95 ${
-            isActive('/dashboard') || location.pathname.startsWith('/store') ? 'text-brand-600 font-semibold' : 'text-slate-400'}`}>
+            isActive('/dashboard') || location.pathname.startsWith('/store') || isActive('/open-new-store')? 'text-brand-600 font-semibold' : 'text-slate-400'}`}>
           <span className="text-xl mb-0.5">🏪</span>
           <span className="text-[11px]">商店管理</span>
         </button>

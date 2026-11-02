@@ -10,29 +10,23 @@ export default function Login() {
   const [loading, setLoading] = useState(false) // 新增：防止重複點擊
   const navigate = useNavigate()
 
+  // ❓黃色問號程式碼
   const [showTooltip, setShowTooltip] = useState(false);
   const tooltipRef = useRef(null);
-
   // 📱 行動端優化：點擊頁面其他地方時，自動關閉提示框
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
-        setShowTooltip(false);
-      }
-    }
+  useEffect(() => { function handleClickOutside(event) {
+      if (tooltipRef.current && !tooltipRef.current.contains(event.target)) { setShowTooltip(false);} }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
+    return () => document.removeEventListener('mousedown', handleClickOutside); }, []);
   // 📱 行動端點擊切換
   const handleIconClick = (e) => {
     e.preventDefault();  // 防止瀏覽器把點擊問號當作表單提交
     e.stopPropagation(); // 防止事件冒泡觸發其他的點擊事件
-    setShowTooltip(!showTooltip);
-  };
+    setShowTooltip(!showTooltip); };
 
 
 
+    
   const handleLogin = async (e) => {
     e.preventDefault()// 在 HTML 中，表單（<form>）提交時預設會重新整理網頁。這行程式碼可以阻止網頁重新整理
     setError(null)
@@ -111,9 +105,10 @@ return (
         (目前沒有審核機制，創了前端就會直接看到)
       </p> */}
       <p className="text-sm text-gray-500 text-center mb-6 whitespace-pre-line">
-      第一次使用市集小幫手需先註冊帳戶{"\n"}<br />
-      註冊帳戶流程：{"\n"}
-      先輸入 '信箱' 和 '密碼' ，再按 '註冊新帳戶' 按鈕
+      {/* 第一次使用市集小幫手需先註冊帳戶{"\n"}<br /> */}
+      {/* 註冊帳戶流程：{"\n"} */}
+      第一次使用需先註冊。{"\n"}
+      流程：輸入 <span className="font-bold">信箱</span> 和 <span className="font-bold">密碼</span>，再按 <span className="text-blue-600 font-medium">註冊新帳戶</span>。
       </p>
 
       {error && <div className="bg-red-50 text-red-500 p-3 rounded-xl text-sm mb-4 border border-red-100">{error}</div>}
@@ -145,7 +140,7 @@ return (
             // <div className="absolute bottom-[160%] left-1/2 -translate-x-1/2 z-50 px-3 py-2 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg whitespace-nowrap">
               /* 修正後的提示文字浮動視窗：移除 left-1/2 和 -translate-x-1/2，改用 left-0 靠左對齊，並限制寬度與允許換行 */
             <div className="absolute bottom-[160%] left-0 z-50 w-64 p-3 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg break-words">
-            目前不提供更換郵箱功能，若輸入錯誤，<br />可以註銷帳戶，再重新註冊新帳號。    {/* 提示文字浮動視窗 */} {/* 提示框底部的小三角形箭頭 */}
+            目前不提供更換郵箱功能，若輸入錯誤，<br />可以註銷帳戶，再重新註冊新帳戶。    {/* 提示文字浮動視窗 */} {/* 提示框底部的小三角形箭頭 */}
             {/* <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div> */}
             {/* 修正後的小三角形箭頭：讓箭頭精準靠左對齊黃色問號 */}
             <div className="absolute top-full left-1 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div>
@@ -195,7 +190,7 @@ return (
             disabled={loading} 
             className="font-medium text-blue-600 hover:text-blue-700 hover:underline focus:outline-none transition-colors disabled:opacity-50"
           >
-            註冊新帳號
+            註冊新帳戶
           </button>
         </div>
 

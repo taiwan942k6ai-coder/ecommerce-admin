@@ -100,7 +100,7 @@ export default function StoreManage() {
               initialTodayImageUpdateAt={store?.today_image_update_at} isAddTodayImageOpen={isAddTodayImageOpen} onAddClick={() => setIsAddTodayImageOpen(true)} uid={store?.spuid}/>}
 
         {activeTab === 'ai' &&  <AiPlans onAddClick={() => setIsGiveSuggestionOpen(true)}/>}
-        {/* {activeTab === 'ai' &&  <AiPlans onAddClick={() => setIsModalOpen(true)}/>} */}
+        {/* {activeTab === 'ai' &&  <AiPlans onAddClick={() => setXXXOpen(true)}/>} 未來要換成這個 */}
       </main>
 
       {/* 獨立彈窗 */}

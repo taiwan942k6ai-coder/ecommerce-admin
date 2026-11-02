@@ -72,17 +72,14 @@ export default function Personal() {
   return (
         // <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden"></div>
     // <div className="min-h-screen bg-gray-50 pb-12">
-    <div className="min-h-screen bg-gray-50 pb-2">
+    <div className="bg-gray-50 pb-2">
       {/* 行動裝置頂部列 */}
 
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
+      <div className="h-4" /> 
       <h2 className="text-base font-bold text-slate-800 mb-4">編輯個人資訊</h2>
       <form onSubmit={handleUpdateUserInfo} className="space-y-3">
-      <div className="flex items-center justify-between mb-4">
-
-  {/*沒加button 預設是submit  會觸發onSubmit*/}
-       
-      </div>
+      <div className="h-1" /> 
 
 
       <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
@@ -121,9 +118,9 @@ export default function Personal() {
         </div>
       </div>
 
-        <label className="block text-xs font-bold text-slate-700 mb-1">其他聯絡資訊　(地址等，串金流等才需要填寫)</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1">其他聯絡資訊　(地址等，串金流後才需要填寫)</label>
         <input type="text" value={userAddress} onChange={(e) => setUserAddress(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="政府規定的一些資訊(待研究)..." />
-
+        <div className="h-4" /> 
         <button type="submit" className="w-full rounded-lg bg-brand-600 py-2.5 text-sm font-bold text-white shadow-md">儲存設定</button>
       </form>
     </div>
