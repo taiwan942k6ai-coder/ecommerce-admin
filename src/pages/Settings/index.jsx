@@ -6,9 +6,7 @@ import { Store, ChevronRight, LogOut, Plus } from 'lucide-react'
 import BottomNav from '../../components/BottomNav'
 
 import Delete from './Delete'
-
-
-//(待處理)   現場照上傳 的頁面(點照片會連絡去)     上線目前都TRUE(有資訊管理者後再修改)
+import Personal from './Personal'
 
 export default function Dashboard() {
   const { user } = useAuth()
@@ -127,55 +125,32 @@ export default function Dashboard() {
 
 
 
-// Delete.jsx:52 註銷失敗: 
-// {code: '23503', details: 'Key (id)=(8dce59bb-bdba-40ed-8629-d1f7ac9c3091) is still referenced from table "profiles".', hint: null, message: 'update or delete on table "users" violates foreign…raint "profiles_user_id_fkey" on table "profiles"'}
-// code
-// : 
-// "23503"
-// details
-// : 
-// "Key (id)=(8dce59bb-bdba-40ed-8629-d1f7ac9c3091) is still referenced from table \"profiles\"."
-// hint
-// : 
-// null
-// message
-// : 
-// "update or delete on table \"users\" violates foreign key constraint \"profiles_user_id_fkey\" on table \"profiles\""
-// [[Prototype]]
-// : 
-// Object
-
-
-
-
-    <div className="pb-2">
+    <div className="pb-20 ">
       {/* 頂部不變的導覽列 */}
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-xs">
+      {/* <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-xs">
         <div className="w-[68px]"></div> 
         <h1 className="text-base font-bold text-slate-800 truncate max-w-[200px]">{8888}</h1>
         <button onClick={() => navigate('/dashboard')} className="text-sm font-medium text-slate-600">← 返回總覽</button>
-      </header>
+      </header> */}
 
       {/* 分頁 Tab 切換 */}
       <div className="mx-4 mt-4 flex rounded-lg bg-slate-100 p-1">
-        <button onClick={() => setActiveTab('personal')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'settings' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
+        <button onClick={() => setActiveTab('personal')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'personal' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
           個人資訊
         </button>
-        <button onClick={() => setActiveTab('platform')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'products' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
+        <button onClick={() => setActiveTab('platform')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'platform' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
           帳戶細節(還沒做)
         </button>
-        <button onClick={() => setActiveTab('delete')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'ai' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
+        <button onClick={() => setActiveTab('delete')} className={`w-1/2 rounded-md py-2 text-center text-sm font-medium transition-all ${activeTab === 'delete' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500'}`}>
           刪除 與 註銷
         </button>
       </div>
 
    
       <main className="px-4 mt-4">
-        {activeTab === 'personal' &&  <Delete onAddClick={() => setIsGiveSuggestionOpen(true)}/>}
-        {activeTab === 'platform' &&  <Delete onAddClick={() => setIsGiveSuggestionOpen(true)}/>}
-          
-
-        {activeTab === 'delete' &&  <Delete onAddClick={() => setIsGiveSuggestionOpen(true)}/>}
+        {activeTab === 'personal' &&  <Personal/>}
+        {activeTab === 'platform' &&  <Personal/>}
+        {activeTab === 'delete'   &&  <Delete/>}
       </main>
 
      

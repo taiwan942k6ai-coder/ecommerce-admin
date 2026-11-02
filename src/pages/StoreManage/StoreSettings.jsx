@@ -77,7 +77,7 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
           <input type="text" value={storeOpenTime} onChange={(e) => setStoreOpenTime(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="輸入商店的聯絡時間..." />
         </div>
         <div className="flex-1"> 
-          <label className="block text-xs font-bold text-slate-700 mb-1">Line</label>
+          <label className="block text-xs font-bold text-slate-700 mb-1">Line(缺教學文件)</label>
           <input type="text" value={storeLine} onChange={(e) => setStoreLine(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="聯絡人LineID 或 Line官方帳號..." />
         </div>
       </div>

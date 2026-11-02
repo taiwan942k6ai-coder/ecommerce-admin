@@ -2,26 +2,25 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../supabaseClient'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { Store, ChevronRight, LogOut, Plus ,Minus} from 'lucide-react'
+import { Store, ChevronRight, LogOut, Plus ,Minus, Trash2} from 'lucide-react'
 import BottomNav from '../../components/BottomNav'
 
 
-//(待處理)   現場照上傳 的頁面(點照片會連絡去)     上線目前都TRUE(有資訊管理者後再修改)
 
 export default function Delete() {
   const { user } = useAuth()
-  // const [whatUser,setWhatUser] = useState(null)
   const [stores, setStores] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
-
+  const [deleteReason, setDeleteReason] = useState('')
   const todayUTCString = new Date().toISOString().split('T')[0];
-  console.log("目前要測試的變數是  todayUTCString：", todayUTCString);
+  // console.log("目前要測試的變數是  todayUTCString：", todayUTCString);
   
   useEffect(() => {
     console.log("目前要測試的變數是  user：", user);
     fetchStores()
   }, [user])
+
 
   const fetchStores = async () => {
     if (!user) return
@@ -32,25 +31,59 @@ export default function Delete() {
       .eq('user_id',user.id)
       .eq('is_active',true)
       .order('created_at', { ascending: false })
-
-    console.log("目前要測試的變數是  data：", data);
+    // console.log("目前要測試的變數是  data：", data);
     if (!error) setStores(data)
     setLoading(false)
   }
 
-  const handleDeleteAccount = async (id) => {  try {
-        console.log("要刪除的用戶為：", id);
-        // 【核心】呼叫我們在 SQL Editor 寫的 RPC 函數
-        const { error: rpcError } = await supabase.rpc('delete_user_self');
-        if (rpcError) throw rpcError;   
 
-        // 清除前端殘留的登入 Session 狀態
-        await supabase.auth.signOut()
-        alert('帳號已刪除，感謝您使用 市集小幫手。\n\n祝福您的事業，如樹栽種在溪水旁，\n按時後結果子，葉子也不枯乾。')
-        navigate('/login')
+  const handleDeleteAccount = async (id) => {  
+    console.log(" [第一步] 註銷流程開始，要刪除的用戶為：", id);
+    try {
+    console.log(" [第二步] 正在呼叫 RPC ...");
+    // 1. 呼叫剛剛寫好的資料庫功能，把使用者的 Profile 改成「已註銷用戶_xxxx」並抹除隱私
+    const { error: rpcDeleteProfileError } = await supabase.rpc('handle_user_soft_delete', {target_user_id: id, reason: '自行註銷帳號'});
+    if (rpcDeleteProfileError)  {
+      console.error(" RPC 執行失敗:", rpcDeleteProfileError);
+      throw rpcDeleteProfileError;  }
+
+    console.log(" [第三步] RPC 移除所有關聯商店...");
+    const { error: deleteStoreError } = await supabase
+      .from('shops')
+      .update({is_active:false , is_visible:false})
+      .eq('user_id', id)
+    if (deleteStoreError)  {
+      console.error(" 關店失敗:", deleteStoreError);
+      throw deleteStoreError;  }
+
+    console.log(" [第四步] 註銷帳號...");
+    // 2. Profile 已經成功偽匿名化，且外鍵已經鬆綁了！// 現在可以安全、乾淨地去把 auth.users 裡面的登入帳號徹底砍掉
+    const { error: rpcAuthError } = await supabase.rpc('delete_user_self');
+    if (rpcAuthError)  {
+      console.error(" 註銷帳號失敗:", rpcAuthError);
+      throw rpcAuthError;
+    }
+
+    alert('帳號已刪除，感謝您使用 市集小幫手。\n\n祝福您的事業，如樹栽種在溪水旁，\n按時後結果子，葉子也不枯乾。\n\n歡迎你再次回來使用，若覺得平台不錯，也可以分享給親朋好友😊')
+    // alert('您的帳戶已成功註銷，歷史評論已為您匿名保留！');
+    await supabase.auth.signOut()
+
+    // 3. 註銷成功後，引導用戶登出或返回首頁
+    navigate('/login')
+
+        // // 【核心】呼叫我們在 SQL Editor 寫的 RPC 函數
+        // const { error: rpcError } = await supabase.rpc('delete_user_self');
+        // if (rpcError) throw rpcError;   
+
+        // // 清除前端殘留的登入 Session 狀態
+        // await supabase.auth.signOut()
+        // alert('帳號已刪除，感謝您使用 市集小幫手。\n\n祝福您的事業，如樹栽種在溪水旁，\n按時後結果子，葉子也不枯乾。')
+        // navigate('/login')
+
             } catch (error) {
-            console.error('註銷失敗:', error);
-            Swal.fire('註銷失敗', error.message || '伺服器發生異常，請稍後再試。', 'error');
+            console.error('註銷失敗:', rpcDeleteProfileError || rpcAuthError || error);
+            alert('註銷失敗，請稍後再試。');
+            // Swal.fire('註銷失敗', error.message || '伺服器發生異常，請稍後再試。', 'error');
             }
     }
 
@@ -60,7 +93,7 @@ export default function Delete() {
     // Supabase 會自動根據你的登入憑證與 RLS 規則，只撈出屬於該 user_id 的商店
     const { data, error } = await supabase
       .from('shops')
-      .update({is_active:false})
+      .update({is_active:false , is_visible:false})
       .eq('spuid', uid)
     alert('商店 '+name+' 已刪除，\n畫面將回到商店總覽')
     setLoading(false)
@@ -73,7 +106,7 @@ export default function Delete() {
     <div className="min-h-screen bg-gray-50 pb-2">
       {/* 行動裝置頂部列 */}
       <div className="bg-white border-b border-gray-100 px-4 py-4 sticky top-0 flex justify-between items-center z-10">
-        <h1 className="text-xl font-bold text-gray-900">　刪除商店(不可逆)</h1>
+        <h1 className="text-xl font-bold text-gray-900">刪除 註銷 皆不可逆</h1>
         <button className="p-2 text-gray-500 hover:text-red-500 flex items-center gap-1" onClick={() => {
                         // 1. 先跳出輸入框，讓使用者輸入密碼
                         const password = prompt('刪除帳戶不可逆，\n若仍要刪除，請正確輸入註冊電子郵箱：');
@@ -87,10 +120,15 @@ export default function Delete() {
 
                         // 3. 密碼輸入後，才執行後續動作
                         console.log('驗證密碼：', password);
+
+                        // 4.獲取反饋
+                        const reason = prompt('請簡單描述刪除帳戶的原因，方便我們改進平台：');
+                        if (reason !== null)   setDeleteReason(reason.trim());
+
                         handleDeleteAccount(user.id)
                         }// 如果點擊「取消」，password 會是 null，直接結束，什麼都不會發生
                         }}>
-          <span className="text-sm font-medium">註銷帳戶</span><LogOut size={20} />
+          <span className="text-sm font-medium">註銷帳戶</span>  <Trash2 size={18} className="text-red-500 group-hover:text-red-600 transition-colors" />
         </button>
       </div>
 
