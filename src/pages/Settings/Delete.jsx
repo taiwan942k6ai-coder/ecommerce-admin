@@ -37,12 +37,12 @@ export default function Delete() {
   }
 
 
-  const handleDeleteAccount = async (id) => {  
+  const handleDeleteAccount = async (id, reason) => {  
     console.log(" [第一步] 註銷流程開始，要刪除的用戶為：", id);
     try {
     console.log(" [第二步] 正在呼叫 RPC ...");
     // 1. 呼叫剛剛寫好的資料庫功能，把使用者的 Profile 改成「已註銷用戶_xxxx」並抹除隱私
-    const { error: rpcDeleteProfileError } = await supabase.rpc('handle_user_soft_delete', {target_user_id: id, reason: '自行註銷帳號'});
+    const { error: rpcDeleteProfileError } = await supabase.rpc('handle_user_soft_delete', {target_user_id: id, reason: reason});
     if (rpcDeleteProfileError)  {
       console.error(" RPC 執行失敗:", rpcDeleteProfileError);
       throw rpcDeleteProfileError;  }
@@ -64,7 +64,7 @@ export default function Delete() {
       throw rpcAuthError;
     }
 
-    alert('帳號已刪除，感謝您使用 市集小幫手。\n\n祝福您的事業，如樹栽種在溪水旁，\n按時後結果子，葉子也不枯乾。\n\n歡迎你再次回來使用，若覺得平台不錯，也可以分享給親朋好友😊')
+    alert('帳號已刪除，感謝您使用 市集小幫手\n\n祝福您的事業，如樹栽種在溪水旁，\n按時後結果子，葉子也不枯乾。\n\n歡迎你再次回來使用，若覺得好用，\n也可以分享給親朋好友😊')
     // alert('您的帳戶已成功註銷，歷史評論已為您匿名保留！');
     await supabase.auth.signOut()
 
@@ -125,7 +125,7 @@ export default function Delete() {
                         const reason = prompt('請簡單描述刪除帳戶的原因，方便我們改進平台：');
                         if (reason !== null)   setDeleteReason(reason.trim());
 
-                        handleDeleteAccount(user.id)
+                        handleDeleteAccount(user.id, reason.trim())
                         }// 如果點擊「取消」，password 會是 null，直接結束，什麼都不會發生
                         }}>
           <span className="text-sm font-medium">註銷帳戶</span>  <Trash2 size={18} className="text-red-500 group-hover:text-red-600 transition-colors" />
