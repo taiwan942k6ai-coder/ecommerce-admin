@@ -5,7 +5,7 @@ import { pinyin } from 'pinyin-pro';
 import { Type } from 'lucide-react';
 
 export default function ProductModal({ isOpen, onClose, storeName, onUploaded, productTypeArray, uid }) {
-  const [newProdStoreUID, setNewProdStoreUID] = useState(uid)
+  const [storeUID, setStoreUID] = useState(uid)
   
   const [newProdName, setNewProdName] = useState('')
   const [newProdType, setNewProdType] = useState('')
@@ -71,7 +71,7 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
 
       const { error } = await supabase
         .from('off_line_products')
-        .insert([{ spuid:newProdStoreUID, sp_name: storeName, name: newProdName, unit:newProdUnit, pd_type:newProdType, introduce:'', have_stock:true, price_origin: parseFloat(newProdPrice), is_active: true, image_url_old: uploadedImageUrl}])
+        .insert([{ spuid:storeUID, sp_name: storeName, name: newProdName, unit:newProdUnit, pd_type:newProdType, introduce:'', have_stock:true, price_origin: parseFloat(newProdPrice), is_active: true, image_url_old: uploadedImageUrl}])
       if (error) throw error
 
       alert('商品 '+newProdName+' 上架成功！')
@@ -106,7 +106,7 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
 
         <form onSubmit={handleCreateProduct} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">商品圖片(未完成，未來也不會馬上顯示)</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 商品圖片(未完成，未來也不會馬上顯示)</label>
             <div className="relative flex items-center justify-center w-full h-24 border-2 border-dashed border-slate-200 rounded-lg bg-slate-50">
               <input type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files[0])} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
               <div className="text-center">
@@ -118,11 +118,11 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
 
         <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
           <div className="flex-1"> {/* flex-1 讓兩個欄位平分寬度 */}
-            <label className="block text-xs font-bold text-slate-700 mb-1">商品名稱 *</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 商品名稱</label>
             <input type="text" required placeholder="例如：美式咖啡" value={newProdName} onChange={(e) => setNewProdName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
           </div>
           <div className="flex-1"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">種類 * (未完成)</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 種類 (未完成)</label>
             {/* <input type="text" required placeholder="影響商品搜尋" value={newProdType} onChange={(e) => setNewProdType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" /> */}
             <select
                 value={newProdType}
@@ -141,11 +141,11 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
 
         <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
           <div className="flex-1"> {/* flex-1 讓兩個欄位平分寬度 */}
-            <label className="block text-xs font-bold text-slate-700 mb-1">販售價格 *</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 販售價格</label>
             <input type="number" required min="0" placeholder="120" value={newProdPrice} onChange={(e) => setNewProdPrice(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-bold text-slate-700 mb-1">販售單位 *</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 販售單位</label>
             <input type="text" required  placeholder="公升" value={newProdUnit} onChange={(e) => setNewProdUnit(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
           </div>
         </div>

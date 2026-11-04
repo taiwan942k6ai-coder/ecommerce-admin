@@ -7,6 +7,7 @@ import ProductList from './ProductList'
 import StoreSettings from './StoreSettings'
 import AiPlans from './AiPlans'
 import ProductModal from './ProductModal'
+import ProductUpdateInfo from './ProductUpdateInfo'
 import StoreTodayImage from './StoreUpdateTodayImage'
 import AiPlanSuggestion from './AiPlanSuggestion'
 import BottomNav from '../../components/BottomNav'
@@ -21,6 +22,10 @@ export default function StoreManage() {
   const [loading, setLoading] = useState(true)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isUpdateProdInfoOpen, setIsUpdateProdInfoOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedProductId, setSelectedProductId] = useState(null)
+  const [selectedProductName, setSelectedProductName] = useState(null)
   const [isAddTodayImageOpen, setIsAddTodayImageOpen] = useState(false)
   const [isGiveSuggestionOpen, setIsGiveSuggestionOpen] = useState(false)
 
@@ -29,9 +34,8 @@ export default function StoreManage() {
   // 封裝成可重複呼叫的資料撈取函式
   // useCallback 確保除非特定資料變了，否則 fetchStoreData 的記憶體位置會被快取，才不會導致無限循環、重複渲染。
   const fetchStoreData = useCallback(async (storeName) => {
-    console.log("目前要測試的變數是  storeName：", storeName);
-    try {
-      setLoading(true)
+    // console.log("目前要測試的變數是  storeName：", storeName);
+    try { setLoading(true)
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) return navigate('/login')
 
@@ -44,19 +48,15 @@ export default function StoreManage() {
       const { data: productTypeData } = await supabase.from('markets').select('product_types').eq('mkuid',storeData.mkuid).single()
       setProductTypeArray(productTypeData.product_types || [])
 
-
       // console.log("目前要測試的變數是  { session }：", { session });//重新命名（Destructuring assignment with renaming）寫法，不存在變數 data
       console.log("目前要測試的變數是  productTypeData：", productTypeData);
     } catch (error) {
       alert('讀取失敗：' + error.message)
       navigate('/dashboard')
-    } finally {
-      setLoading(false)
-    }
+    } finally {  setLoading(false) }
   }, [storeName, navigate])
 
-  useEffect(() => {
-    fetchStoreData(storeName)
+  useEffect(() => { fetchStoreData(storeName)
   }, [fetchStoreData])
 
 
@@ -93,7 +93,8 @@ export default function StoreManage() {
 
       {/* 內容渲染區 */}
       <main className="px-4 mt-4">
-        {activeTab === 'products' &&  <ProductList storeName={storeName} products={products} setProducts={setProducts} onAddClick={() => setIsModalOpen(true)} onPriceUpdated={fetchStoreData} uid={store?.spuid}/>}
+        {activeTab === 'products' &&  <ProductList storeName={storeName} products={products} setProducts={setProducts} onAddClick={() => setIsModalOpen(true)} onPriceUpdated={fetchStoreData} uid={store?.spuid} 
+                                                 setSelectedProduct={setSelectedProduct} onAddClick2={() => setIsUpdateProdInfoOpen(true)}/>}
         {activeTab === 'settings' &&
           <StoreSettings storeName={storeName} initialName={store?.name} initialDesc={store?.introduce} initialType={store?.sp_type}
               initialPOC={store?.poc} initialPhone={store?.phone} initialOpenTime={store?.open_time} initialLine={store?.line} initialOther={store?.other} onInfoUpdated={fetchStoreData}
@@ -105,6 +106,7 @@ export default function StoreManage() {
 
       {/* 獨立彈窗 */}
       <ProductModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} storeName={storeName} onUploaded={fetchStoreData} productTypeArray={productTypeArray} uid={store?.spuid}/>
+      <ProductUpdateInfo key={selectedProduct ? selectedProduct.pdid : 'empty'}  isOpen={isUpdateProdInfoOpen} onClose={() => {setIsUpdateProdInfoOpen(false); setSelectedProduct(null)}} storeName={storeName} onUpdated={fetchStoreData} productTypeArray={productTypeArray} selectedProduct={selectedProduct}/>
       <StoreTodayImage isOpen={isAddTodayImageOpen} onClose={() => setIsAddTodayImageOpen(false)} storeName={storeName} onTodayPhotoUpdated={fetchStoreData} />
       <AiPlanSuggestion isOpen={isGiveSuggestionOpen} onClose={() => setIsGiveSuggestionOpen(false)} />
       {/* 底部全域導覽 */}

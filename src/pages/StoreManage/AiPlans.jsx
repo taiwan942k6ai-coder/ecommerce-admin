@@ -167,7 +167,7 @@ export default function PlainList({  onAddClick
           <div className="flex items-center space-x-1.5 md:hidden flex-shrink-0">
             { Number(plan.priority) === 1 && 
             <span className="inline-flex items-center text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200">
-              處理中                           </span>}
+              處理中 </span>}
             {/* { Number(plan.priority) !== 999 && 
             <span className="inline-flex items-center text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
               優先 {plan.priority || '待審'}   </span>} */}
@@ -176,7 +176,7 @@ export default function PlainList({  onAddClick
               <span className="inline-flex items-center text-[11px] font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 line-through">
               已完成  </span> ) : (
               <span className="inline-flex items-center text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
-              優先度 {plan.priority || '待審'}   </span>)
+              優先度 {plan.priority || '待審'}  </span>)
             }
 
             <span className="inline-flex items-center text-[11px] font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200/60">
@@ -188,8 +188,7 @@ export default function PlainList({  onAddClick
         {/* 桌面版優先度：僅在 md 以上顯示 */}
         <div className="hidden md:block w-16 flex-shrink-0 text-center order-first">
           <span className="inline-flex items-center justify-center w-7 h-7 text-xs font-bold text-slate-700 bg-slate-100 rounded-full">
-            {Number(plan.priority) === 999 ? '完成' : plan.priority || '待審'}
-          </span>
+            {Number(plan.priority) === 999 ? '完成' : plan.priority || '待審'} </span>
         </div>
 
         {/* 說明欄位：手機上會換行頂格，桌面上成為第三欄 */}

@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../../supabaseClient'
 
 
-//(待製作) 點照片，出現商品描述 和圖片更新(目前圖和新上傳圖)
-
-
-export default function ProductList({ storeName, products, setProducts, onAddClick, onPriceUpdated, uid }) {
+//(待製作) 點照片，出現商品描述 和圖片更新(目前圖和新上傳圖 都要顯示，還在思考要不要做)
+export default function ProductList({ storeName, products, setProducts, onAddClick, onAddClick2, onPriceUpdated, uid, setSelectedProduct }) {
 // console.log("目前要測試的變數是  products：", products);
 
   const handleToggleActive = async (productId, currentStatus) => {//is_active
@@ -109,7 +107,9 @@ const handlePriceUpdate = async (products, newPrices) => {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">商品清單</h2>
+        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">　商品清單　</h2>
+        <div className="flex-1 min-w-0 text-xs text-slate-600 break-words pt-1 md:pt-0">
+          點圖片、商品名 可更新商品資訊 </div>
         <button onClick={onAddClick} className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-brand-700 active:scale-95 transition-all">+ 新增商品</button>
       </div>
 
@@ -156,18 +156,16 @@ const handlePriceUpdate = async (products, newPrices) => {
 
               {/* 2. 中間偏左：圖片 + 商品名稱與目前價格 (維持上下顯示) */}
               <div className="flex flex-1 items-center space-x-3 min-w-0">
-                {/* 商品圖片 */}
-                <div className="h-12 w-12 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100">
+                <div onClick={() => { setSelectedProduct(product); onAddClick2();}} className="h-12 w-12 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100 cursor-pointer">
+                {/* <div className="h-12 w-12 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100"> */}
                   {product.image_url_old ? (
                     <img src={product.image_url_old} alt={product.name} className="h-full w-full object-cover" />
-                  ) : (
-                    <span>📦</span>
-                  )}
+                  ) : (  <span>📦</span> )}
                 </div>
                 
                 {/* 名稱與目前價格 */}
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-bold text-slate-800 truncate">{product.name} / {product.unit}</h3>
+                  <h3 onClick={() => { setSelectedProduct(product); onAddClick2();}} className="text-sm font-bold text-slate-800 truncate cursor-pointer">{product.name} / {product.unit}</h3>
                   <p className="text-xs text-slate-400 mt-0.5">
                     目前: <span className="text-brand-600 font-semibold">${product.price_origin?.toLocaleString()}</span>
                   </p>
