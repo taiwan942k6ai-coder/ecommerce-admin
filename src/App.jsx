@@ -9,7 +9,6 @@ import StoreManage from './pages/StoreManage/index.jsx'
 import Settings from './pages/Settings/index.jsx'
 // import StoreManagePhoto from './pages/StoreManagePhoto/index.jsx'
 import { Navbar } from './components/Navbar'; // 💡 用花括號引入拆好的 Navbar
-
 import ProtectedRoute from './components/ProtectedRoute' // 👈 引入剛剛寫好的守護組件
 
 
@@ -47,14 +46,10 @@ function App() {
                                                       </ProtectedRoute>}/> */}
                                                       {/* 🔒 單一商店管理封面照（需要保護）目前好像沒屁用 是之前多開的檔案  如果商店有多個照片 輪播管理 */}
 
-        {/* <Route path="/store/:storeName/addProductOK"  element={<Navigate to="/store/:storeName" replace />} /> */}
-
 
         <Route path="/settings"           element={<ProtectedRoute>
                                                   <Settings />
                                                 </ProtectedRoute>}/>{/* 🔒 單一商店管理與商品設定（需要保護） */}
-
-
       </Routes>
     </div>
   </div>

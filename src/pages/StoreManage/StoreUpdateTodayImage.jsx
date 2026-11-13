@@ -3,7 +3,7 @@ import { supabase } from '../../supabaseClient'
 import imageCompression from 'browser-image-compression';
 import { pinyin } from 'pinyin-pro';
 
-export default function StoreTodayImage({ isOpen, onClose, storeName, onTodayPhotoUpdated }) {
+export default function StoreTodayImage({ isOpen, onClose, storeName, onTodayPhotoUpdated, storeUID }) {
   const [imageFile, setImageFile] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -59,10 +59,11 @@ export default function StoreTodayImage({ isOpen, onClose, storeName, onTodayPho
 
 
       const { error } = await supabase
-        .from('shops')
+        .from('sellers')
         // .insert([{ spid:3, sp_name: storeName, name: newProdName, unit:newProdUnit, pd_type:newProdType, introduce:'', have_stock:true, price_origin: parseFloat(newProdPrice), is_active: true, image_url_old: uploadedImageUrl}])
         .update({  today_image_url_old: uploadedImageUrl })
-        .eq('name', storeName)
+        // .eq('name', storeName)
+        .eq('spuid', storeUID)
       if (error) throw error
 
       alert('今日現場照片 更新成功！')
@@ -71,7 +72,7 @@ export default function StoreTodayImage({ isOpen, onClose, storeName, onTodayPho
         e.preventDefault();
       }
 
-      onTodayPhotoUpdated(storeName) // 觸發父組件重新整理
+      onTodayPhotoUpdated(storeUID) // 觸發父組件重新整理
       setImageFile(null)
       onClose()
     } catch (error) {

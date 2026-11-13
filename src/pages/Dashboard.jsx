@@ -14,12 +14,11 @@ export default function Dashboard() {
   const [stores, setStores] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
-
   const todayUTCString = new Date().toISOString().split('T')[0];
-  console.log("目前要測試的變數是  todayUTCString：", todayUTCString);
+  // console.log("目前要測試的變數是  todayUTCString：", todayUTCString);
   
   useEffect(() => {
-    console.log("目前要測試的變數是  user：", user);
+    // console.log("目前要測試的變數是  user：", user);
     fetchStores()
   }, [user])
 
@@ -27,13 +26,14 @@ export default function Dashboard() {
     if (!user) return
     // Supabase 會自動根據你的登入憑證與 RLS 規則，只撈出屬於該 user_id 的商店
     const { data, error } = await supabase
-      .from('shops')
-      .select('name,mk_name,today_image_url_old,today_image_update_at,is_visible')
+      .from('sellers')
+      // .from('shops')
+      // .select('name,mk_name,today_image_url_old,today_image_update_at,is_visible')
+      .select('sp_name,spuid,industry_and_markets(mk_name),today_image_url_old,today_image_update_at,is_visible')
       .eq('user_id',user.id)
       .eq('is_active',true)
-      .order('created_at', { ascending: false })
-
-    console.log("目前要測試的變數是  data：", data);
+      .order('created_at', { ascending: true })
+    // console.log("目前要測試的變數是  data：", data);
     if (!error) setStores(data)
     setLoading(false)
   }
@@ -75,7 +75,8 @@ export default function Dashboard() {
         ) : (
           <div className="space-y-3">
             {stores.map(store => (
-              <div key={store.name} onClick={() => navigate(`/store/${store.name}`)}
+              // <div key={store.sp_name} onClick={() => navigate(`/store/${store.sp_name}`)} 改UID，避免不同地方開同樣的店名
+              <div key={store.spuid} onClick={() => navigate(`/store/${store.sp_name}`, { state: { storeUID: store.spuid } })}
                 className="bg-white p-3 rounded-2xl border border-gray-100 flex items-center justify-between active:bg-gray-50 cursor-pointer transition shadow-sm">
                 {/* <div className="flex items-center space-x-3"> */}
                 {/* 1. 父容器：加上 w-full 與 justify-between，讓左右兩邊彈開 */}
@@ -86,15 +87,15 @@ export default function Dashboard() {
                     )}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 text-base">{store.name}</h3>
-                    <p className="text-xs text-gray-400 line-clamp-1">{store.mk_name || '所屬市集消失了'}</p>
+                    <h3 className="font-bold text-gray-900 text-base">{store.sp_name|| '商店名未知'}</h3>
+                    <p className="text-xs text-gray-400 line-clamp-1">{store.industry_and_markets?.mk_name || '所屬市集消失了'}</p>
                   </div>
 
                           {/* 商店圖片 */}
                   <div className="w-32 h-18 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100">
                     {  
                     store.today_image_update_at?.slice(0, 10) === todayUTCString? (
-                    <img src={store.today_image_url_old} alt={store.name} className="h-full w-full object-cover" />
+                    <img src={store.today_image_url_old} alt={store.sp_name} className="h-full w-full object-cover" />
                     ) : (
                       <span className="font-medium text-rose-500 whitespace-pre-line">　(⚠️ 尚未更新){"\n"}攤販今天的現場照片</span>
                       // <span className="font-medium text-rose-500">{store.today_image_update_at?.slice(0, 10)} 空??</span>

@@ -70,8 +70,8 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
 
 
       const { error } = await supabase
-        .from('off_line_products')
-        .insert([{ spuid:storeUID, sp_name: storeName, name: newProdName, unit:newProdUnit, pd_type:newProdType, introduce:'', have_stock:true, price_origin: parseFloat(newProdPrice), is_active: true, image_url_old: uploadedImageUrl}])
+        .from('products')
+        .insert([{ spuid:storeUID, pd_name: newProdName, unit:newProdUnit, subcategory_id:newProdType, pd_introduce:'', have_stock:false, price_origin: parseFloat(newProdPrice), is_visible:false, is_active: true, image_url: uploadedImageUrl}])
       if (error) throw error
 
       alert('商品 '+newProdName+' 上架成功！')
@@ -80,7 +80,7 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
         e.preventDefault();
       }
       // 💡 修正 2：先把資料傳給爸爸，讓父組件知道要刷新了
-      onUploaded(storeName) // 觸發父組件重新整理
+      onUploaded(storeUID) // 觸發父組件重新整理
       setNewProdName('')
       setNewProdPrice('')
       setImageFile(null)
@@ -122,18 +122,18 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
             <input type="text" required placeholder="例如：美式咖啡" value={newProdName} onChange={(e) => setNewProdName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
           </div>
           <div className="flex-1"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">* 種類 (未完成)</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 商品分類 (搜尋用)</label>
             {/* <input type="text" required placeholder="影響商品搜尋" value={newProdType} onChange={(e) => setNewProdType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" /> */}
             <select
                 value={newProdType}
                 onChange={(e) => setNewProdType(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none">
-            <option value="">請選擇型態...</option>
-            {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
-            {/* { console.log("目前要測試的變數是 productTypeArray：", productTypeArray)} */}
-            {Array.isArray(productTypeArray) && productTypeArray.map((type,index) => (
-                <option key={index} value={type}>
-                    {type}
+            <option value="">請選擇...</option>
+            {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> 和 陣列解構Array Destructuring*/}
+            { console.log("目前要測試的變數是111 productTypeArray：", productTypeArray)}
+            {Array.isArray(productTypeArray) && productTypeArray.map(({subcategory_id,subcategory_name}) => (
+                <option key={subcategory_id} value={subcategory_id}>
+                    {subcategory_name}
                 </option>         ))}
             </select>          
           </div>

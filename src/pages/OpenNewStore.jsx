@@ -48,13 +48,14 @@ export default function OpenNewStore() {
     setLoading(true)
     try {  
         const { data, error } = await supabase
-        .from('markets')
-        .select('name,mkuid, mk_type, mk_type2, shop_types') 
-        .order('name', { ascending: false }); // 按照 name 欄位排序
-
+        // .from('markets')
+        .from('industry_and_markets')
+        // .select('name,mkuid, mk_type, mk_type2, shop_types') 
+        // .select('mk_name,mkuid,mk_type, market_categories(category_name), product_categories(category_name)') 
+        .select('mk_name,mkuid,mk_type, market_categories(category_name), market_category_relations (product_categories (category_id,category_name))')
+        // .order('mk_name', { ascending: false }); // 按照 name 欄位排序
         if (error) {throw error;}
-
-        console.log("目前要測試的變數是  data：", data);
+        // console.log("市集資料表撈出 data：", data);
         // setMarketArray(data.map(market => market.name)) //存純文字陣列
         setMarketArray(data) //直接存整包物件陣列(不能直接做下拉選單)
     } catch (error) {
@@ -73,7 +74,8 @@ export default function OpenNewStore() {
   const handleCreateNewStore = async (e) => {
     e.preventDefault()
     try {
-      const { error } = await supabase.from('shops').insert({ name: newStoreName, sp_type:newStoreType, introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine,mkuid: newStoreMKUID, mk_name:newStoreMarket, user_id:user.id})
+      // const { error } = await supabase.from('shops').insert({ name: newStoreName, sp_type:newStoreType, introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine,mkuid: newStoreMKUID, mk_name:newStoreMarket, user_id:user.id})
+      const { error } = await supabase.from('sellers').insert({ sp_name: newStoreName, shop_type:newStoreType, sp_introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine,mkuid: newStoreMKUID, user_id:user.id})
       if (error) throw error
       alert('新商店 '+newStoreName+' 創建成功！'),
       navigate(`/dashboard`)//相同網址不會重新渲染，除非監聽網址+產生時間
@@ -86,7 +88,9 @@ export default function OpenNewStore() {
   console.log("市場資料已成功更新：", marketArray);}, [marketArray]); // 當 marketArray 變動時才會觸發
 
   const uniqueMK_type2 = marketArray ? 
-  [...new Set(marketArray.filter(m => m.mk_type === newStoreMarketType).map(m => m.mk_type2))] : [marketArray];
+  [...new Set(marketArray.filter(m => m.mk_type === newStoreMarketType).map(m => m.market_categories?.category_name))] : [marketArray];
+  // [...new Set(marketArray.filter(m => m.mk_type === newStoreMarketType).map(m => m.mk_type2))] : [marketArray];
+
 
     if (loading)     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
@@ -129,7 +133,7 @@ export default function OpenNewStore() {
 
         <div className="flex items-center gap-4">
           <div className="flex-1"> {/* 左邊：下拉選單 (根據標籤 會有不同的下拉選單)*/}
-          <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 市集位置' : '* 產業類別' }</label>
+          <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 市集位置' : '* 商品大類' }</label>
           <select required  value={newStoreMarketType2}
               onChange={(e) => {setNewStoreMarketType2(e.target.value); setNewStoreMarket(''); setNewStoreType(''); setNewStoreMKUID(''); setStoreTypeArray([]);} }
               className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none bg-white">
@@ -142,19 +146,22 @@ export default function OpenNewStore() {
           </div>
 
           <div className="flex-1"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 市集名稱' : '* 電商分類' }</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 市集名稱' : '* 商品中類' }</label>
             {/* <input type="text" required value={newStoreType} onChange={(e) => setNewStoreType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" /> */}
             <select required  value={newStoreMarket}
                 onChange={(e) => {setNewStoreMarket(e.target.value);setNewStoreType('');
-                    const target = marketArray.find(m => m.name === e.target.value);
-                    // console.log("目前要測試的變數是  target.mkuid：", target.mkuid);
+                    const target = marketArray.find(m => m.mk_name === e.target.value);
+                    // console.log("目前要測試的變數是  target.mkuid", target.mkuid);
                     if (target) { setNewStoreMKUID(target.mkuid);} 
-                    if (target) { setStoreTypeArray(target.shop_types);} 
+                    // if (target) { setStoreTypeArray(target.shop_types);} 
+                    // console.log("目前要測試的變數是  target.market_category_relations：", target.market_category_relations);
+                    if (target) { setStoreTypeArray(target.market_category_relations);} 
                   } }
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none">
               <option value="">請選擇...</option>{/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
-              {marketArray && marketArray.filter(market => market.mk_type2 === newStoreMarketType2).map((market, index) => ( 
-              <option key={index} value={market.name}> {market.name} </option> ))}
+              {/* {marketArray && marketArray.filter(market => market.mk_type2 === newStoreMarketType2).map((market, index) => (  */}
+              {marketArray && marketArray.filter(market => market.market_categories?.category_name === newStoreMarketType2).map((market, index) => ( 
+              <option key={index} value={market.mk_name}> {market.mk_name} </option> ))}
             </select>
           </div>
         </div>
@@ -162,7 +169,7 @@ export default function OpenNewStore() {
         <div className="flex items-center gap-4"> 
           <div className="flex-1"> 
             <label className="block text-xs font-bold text-slate-700 mb-1">* 商店名稱</label>
-            <input type="text" required value={newStoreName} onChange={(e) => setNewStoreName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="不要超過七個字..."/>
+            <input type="text" required value={newStoreName} onChange={(e) => setNewStoreName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="七字內，no特殊符號..."/>
           </div>
           <div className="flex-1"> 
             <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 主商品型態' : '* 主商品型態' }</label>
@@ -172,9 +179,10 @@ export default function OpenNewStore() {
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none">
             <option value="">請選擇型態...</option>
             {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
-            {storeTypeArray && storeTypeArray.map((type, index) => (
-                <option key={index} value={storeTypeArray[index]}>
-                    {storeTypeArray[index]}
+            {/* {console.log("storeTypeArray：", storeTypeArray)} */}
+            {storeTypeArray && storeTypeArray.map((type) => (
+                <option key={type.product_categories.category_id} value={type.product_categories.category_id}>
+                    {type.product_categories.category_name}
                 </option>         ))}
             </select>
           </div>

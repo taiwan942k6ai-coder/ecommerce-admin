@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../supabaseClient'
 
-export default function StoreSettings({ storeName, initialName, initialType, initialDesc, initialPOC, initialPhone, initialOpenTime, initialLine, initialOther, initialTodayImageUpdateAt, onInfoUpdated, isTodayImageOpen, onAddClick, uid}) {
+export default function StoreSettings({ storeName, initialName, initialType, initialDesc, initialPOC, initialPhone, initialOpenTime, initialLine, initialOther, initialTodayImageUpdateAt, onInfoUpdated, isTodayImageOpen, onAddClick, uid, storeUID }) {
   const [thisStoreName, setThisStoreName] = useState(initialName || '')
   const [storeType, setStoreType] = useState(initialType || '')
   const [storeDesc, setStoreDesc] = useState(initialDesc || '')
@@ -30,10 +30,10 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
   const handleUpdateStoreInfo = async (e) => {
     e.preventDefault()
     try {//eq('name', storeName)應該改成uid，但我還在思考要不要讓攤販換名稱(總覺得不能換比較好)
-      const { error } = await supabase.from('shops').update({ name: thisStoreName, introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine, other: storeOther }).eq('spuid', uid)
+      const { error } = await supabase.from('sellers').update({ sp_name: thisStoreName, sp_introduce: storeDesc, poc: storePOC, phone: storePhone, open_time: storeOpenTime, line: storeLine, other: storeOther }).eq('spuid', uid)
       if (error) throw error
       alert(thisStoreName+' 商店資訊更新成功！'),
-      onInfoUpdated(thisStoreName)
+      onInfoUpdated(storeUID)
       // navigate(`/store/${encodeURIComponent(newStoreName)}`)//我自己加的，才不會出現上面下面名子不同。目前改名子會導致商品找不到爸爸。
       // navigate(`/dashboard`)//相同網址不會重新渲染，除非監聽網址+產生時間
     } catch (error) {
@@ -61,7 +61,7 @@ export default function StoreSettings({ storeName, initialName, initialType, ini
         </div>
         <div className="flex-1"> 
           <label className="block text-xs font-bold text-slate-700 mb-1">* 主商品型態(不可更改)</label>
-          <input type="text" readOnly value={storeType} onChange={(e) => setStoreType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+          <input type="text" readOnly value={storeType.category_name} onChange={(e) => setStoreType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
         </div>
       </div>
 

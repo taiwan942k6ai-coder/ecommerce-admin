@@ -12,7 +12,7 @@ export default function Delete() {
   const [stores, setStores] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
-  const [deleteReason, setDeleteReason] = useState('')
+  // const [deleteReason, setDeleteReason] = useState('')
   const todayUTCString = new Date().toISOString().split('T')[0];
   // console.log("目前要測試的變數是  todayUTCString：", todayUTCString);
   
@@ -26,8 +26,10 @@ export default function Delete() {
     if (!user) return
     // Supabase 會自動根據你的登入憑證與 RLS 規則，只撈出屬於該 user_id 的商店
     const { data, error } = await supabase
-      .from('shops')
-      .select('name,mk_name,today_image_url_old,today_image_update_at,spuid,is_visible')
+      // .from('shops')
+      .from('sellers')
+      // .select('name,mk_name,today_image_url_old,today_image_update_at,spuid,is_visible')
+      .select('sp_name,industry_and_markets(mk_name),today_image_url_old,today_image_update_at,spuid,is_visible')
       .eq('user_id',user.id)
       .eq('is_active',true)
       .order('created_at', { ascending: false })
@@ -49,7 +51,8 @@ export default function Delete() {
 
     console.log(" [第三步] RPC 移除所有關聯商店...");
     const { error: deleteStoreError } = await supabase
-      .from('shops')
+      // .from('shops')
+      .from('sellers')
       .update({is_active:false , is_visible:false})
       .eq('user_id', id)
     if (deleteStoreError)  {
@@ -92,7 +95,8 @@ export default function Delete() {
     if (!user) return
     // Supabase 會自動根據你的登入憑證與 RLS 規則，只撈出屬於該 user_id 的商店
     const { data, error } = await supabase
-      .from('shops')
+      // .from('shops')
+      .from('sellers')
       .update({is_active:false , is_visible:false})
       .eq('spuid', uid)
     alert('商店 '+name+' 已刪除，\n畫面將回到商店總覽')
@@ -123,8 +127,7 @@ export default function Delete() {
 
                         // 4.獲取反饋
                         const reason = prompt('請簡單描述刪除帳戶的原因，方便我們改進平台：');
-                        if (reason !== null)   setDeleteReason(reason.trim());
-
+                        // if (reason !== null)   setDeleteReason(reason.trim());
                         handleDeleteAccount(user.id, reason.trim())
                         }// 如果點擊「取消」，password 會是 null，直接結束，什麼都不會發生
                         }}>
@@ -149,7 +152,7 @@ export default function Delete() {
           <div className="space-y-3">
             {stores.map(store => (
               <div  className="bg-white p-3 rounded-2xl border border-gray-100 flex items-center justify-between active:bg-gray-50 cursor-pointer transition shadow-sm"
-                    key={store.name}   onClick={() => {
+                    key={store.spuid}   onClick={() => {
                         // 1. 先跳出輸入框，讓使用者輸入密碼
                         const password = prompt('刪除商店不可逆，\n若仍要刪除，請正確輸入要刪除的商店名稱：');
                                                     
@@ -157,12 +160,12 @@ export default function Delete() {
                         if (password !== null) {
                         if (password.trim() === '' ) {
                             alert('商店名稱不能為空！');    return; }
-                        if (password.trim() !== store.name ) { 
+                        if (password.trim() !== store.sp_name ) { 
                             alert('商店名稱輸入錯誤！');    return; }
 
                         // 3. 密碼輸入後，才執行後續動作
                         console.log('驗證密碼：', password);
-                        handleDeleteStore(store.spuid,store.name)
+                        handleDeleteStore(store.spuid,store.sp_name)
                         }// 如果點擊「取消」，password 會是 null，直接結束，什麼都不會發生
                         }}>
 
@@ -172,13 +175,13 @@ export default function Delete() {
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-gray-900 text-base">{store.name}</h3>
-                    <p className="text-xs text-gray-400 line-clamp-1">{store.mk_name || '所屬市集消失了'}</p>
+                    <h3 className="font-bold text-gray-900 text-base">{store.sp_name}</h3>
+                    <p className="text-xs text-gray-400 line-clamp-1">{store.industry_and_markets.mk_name || '所屬市集消失了'}</p>
                   </div>
                           {/* 商店圖片 */}
                   <div className="w-32 h-18 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100">
                     {  store.today_image_update_at?.slice(0, 10) === todayUTCString? (
-                        <img src={store.today_image_url_old} alt={store.name} className="h-full w-full object-cover" />
+                        <img src={store.today_image_url_old} alt={store.sp_name} className="h-full w-full object-cover" />
                         ) : (
                         <span className="font-medium text-rose-500 whitespace-pre-line">　(⚠️ 尚未更新){"\n"}攤販今天的現場照片</span> )}
                   </div>  

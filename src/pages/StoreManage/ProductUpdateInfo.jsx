@@ -3,11 +3,11 @@ import { supabase } from '../../supabaseClient'
 import imageCompression from 'browser-image-compression';
 import { pinyin } from 'pinyin-pro';
 
-export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdated, productTypeArray, selectedProduct }) {
-  const [prodName, setProdName] = useState(selectedProduct? selectedProduct.name : '')
-  const [prodType, setProdType] = useState(selectedProduct? selectedProduct.pd_type : '')
+export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdated, productTypeArray, selectedProduct, storeUID }) {
+  const [prodName, setProdName] = useState(selectedProduct? selectedProduct.pd_name : '')
+  const [prodType, setProdType] = useState(selectedProduct? selectedProduct.subcategory_id : '')//要用key
   const [prodUnit, setProdUnit] = useState(selectedProduct? selectedProduct.unit : '')
-  const [prodIntroduce, setProdIntroduce] = useState(selectedProduct? selectedProduct.introduce : ''  )
+  const [prodIntroduce, setProdIntroduce] = useState(selectedProduct? selectedProduct.pd_introduce : ''  )
   const [prodUrl, setProdUrl] = useState(selectedProduct? selectedProduct.image_url_old : '')
   // const [imageOldFile, setImageOldFile] = useState(null)
   const [imageFile, setImageFile] = useState(null)
@@ -68,9 +68,9 @@ export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdate
 
 
       const { error } = await supabase
-        .from('off_line_products')
-        .update([{ name: prodName, unit:prodUnit, pd_type:prodType, introduce:prodIntroduce, image_url_old: uploadedImageUrl||prodUrl }])
-        .eq('pdid', selectedProduct.pdid)
+        .from('products')
+        .update([{ pd_name: prodName, unit:prodUnit, subcategory_id:prodType, pd_introduce:prodIntroduce, image_url: uploadedImageUrl||prodUrl }])
+        .eq('pduid', selectedProduct.pduid)
         if (error) throw error
 
       alert('商品 '+prodName+' 更新成功！')
@@ -79,7 +79,7 @@ export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdate
         e.preventDefault();
       }
       // 💡 修正 2：先把資料傳給爸爸，讓父組件知道要刷新了
-      onUpdated(storeName) // 觸發父組件重新整理
+      onUpdated(storeUID) // 觸發父組件重新整理
       setImageFile(null)
       onClose()
     } catch (error) {
@@ -98,7 +98,7 @@ export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdate
       {/* 1. 限制 Modal 最大高度，並在手機版底部加上 pb-20 或 pb-safe，避免被導覽列遮擋 */}
       <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white p-6 pb-20 sm:pb-6 shadow-xl transition-all transform"> 
         <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-          <h3 className="text-base font-bold text-slate-800">✨ 更新 {selectedProduct.name} 的圖片和資訊</h3>
+          <h3 className="text-base font-bold text-slate-800">✨ 更新 {selectedProduct.pd_name} 的圖片和資訊</h3>
           <button onClick={onClose} className="text-slate-400 text-lg p-1">✕</button>
         </div>
 
@@ -120,18 +120,18 @@ export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdate
             <input type="text" required placeholder="例如：美式咖啡" value={prodName} onChange={(e) => setProdName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
           </div>
           <div className="flex-2"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">* 商品種類</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">* 商品分類</label>
             {/* <input type="text" required placeholder="影響商品搜尋" value={newProdType} onChange={(e) => setNewProdType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" /> */}
-            <select
+            <select required
                 value={prodType}
                 onChange={(e) => setProdType(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none">
-            <option value="">請選擇型態...</option>
+            <option value="">請選擇...</option>
             {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
             {/* { console.log("目前要測試的變數是 productTypeArray：", productTypeArray)} */}
-            {Array.isArray(productTypeArray) && productTypeArray.map((type,index) => (
-                <option key={index} value={type}>
-                    {type}
+                {Array.isArray(productTypeArray) && productTypeArray.map(({subcategory_id,subcategory_name}) => (
+                <option key={subcategory_id} value={subcategory_id}>
+                    {subcategory_name}
                 </option>         ))}
             </select>          
           </div>
@@ -144,7 +144,7 @@ export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdate
         <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
           <div className="flex-1"> {/* flex-1 讓兩個欄位平分寬度 */}
             <label className="block text-xs font-bold text-slate-700 mb-1">* 商品描述</label>
-            <textarea rows={3} placeholder="例如：美式咖啡" value={prodIntroduce} onChange={(e) => setProdIntroduce(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+            <textarea rows={3} placeholder="建議三十字內，若字數過多，商品卡片會被拉長..." value={prodIntroduce} onChange={(e) => setProdIntroduce(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
           </div>
         </div>
 

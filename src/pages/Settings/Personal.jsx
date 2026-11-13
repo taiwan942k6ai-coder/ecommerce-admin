@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../supabaseClient'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { Store, ChevronRight, LogOut, Plus ,Minus, Trash2} from 'lucide-react'
 import BottomNav from '../../components/BottomNav'
 
 
@@ -10,16 +9,13 @@ import BottomNav from '../../components/BottomNav'
 
 export default function Personal() {
   const { user } = useAuth()
-
   const [userName, setUserName] = useState('')
   const [userPersona, setUserPersona] = useState('')
-  // const [userCreateTime, setUserCreateTime] = useState('')
   const [userAvatarUrl, setUserAvatarUrl] = useState('')
   const [userPhone, setUserPhone] = useState('')
   const [userAddress, setUserAddress] = useState('')
-
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const todayUTCString = new Date().toISOString().split('T')[0];
   console.log("目前要測試的變數是  todayUTCString：", todayUTCString);
@@ -31,12 +27,11 @@ export default function Personal() {
 
 
 
-
-
   const handleUpdateUserInfo = async (e) => {
     e.preventDefault()
-    try {//eq('name', storeName)應該改成uid，但我還在思考要不要讓攤販換名稱(總覺得不能換比較好)
-      const { error } = await supabase.from('profiles').update({ name: userName, persona: userPersona, avatar_url: userAvatarUrl, phone: userPhone, address: userAddress }).eq('user_id', user.id)
+    try { const { error } = await supabase.from('profiles')
+            .update({ name: userName, persona: userPersona, avatar_url: userAvatarUrl, phone: userPhone, address: userAddress })
+            .eq('user_id', user.id)
       if (error) throw error
       alert(' 個人資訊更新成功！')
     } catch (error) {
@@ -49,30 +44,26 @@ export default function Personal() {
 
   const fetchUserInfo = async () => {
     if (!user) return
-    // Supabase 會自動根據你的登入憑證與 RLS 規則，只撈出屬於該 user_id 的商店
     const { data, error } = await supabase
       .from('profiles')
       .select('name,persona,avatar_url,phone,address')
       .eq('user_id',user.id)
       .eq('is_active',true)
       
-    // console.log("目前要測試的變數是  data：", data);
     if (!error) {
-
     setUserName(data[0]?.name || '')
     setUserPersona(data[0]?.persona || '')
     setUserAvatarUrl(data[0]?.avatar_url || '')
     setUserPhone(data[0]?.phone || '')
     setUserAddress(data[0]?.address || '')
-
     setLoading(false)
   } }
 
  
   return (
-        // <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden"></div>
+    // <div className="flex flex-col h-full w-full items-center justify-center p-4 bg-slate-50 overflow-hidden"></div>
     // <div className="min-h-screen bg-gray-50 pb-12">
-    <div className="bg-gray-50 pb-2">
+    <div className="bg-gray-50 pb-24">
       {/* 行動裝置頂部列 */}
 
     <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
@@ -81,11 +72,10 @@ export default function Personal() {
       <form onSubmit={handleUpdateUserInfo} className="space-y-3">
       <div className="h-1" /> 
 
-
       <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
         <div className="flex-1"> {/* flex-1 讓兩個欄位平分寬度 */}
           <label className="block text-xs font-bold text-slate-700 mb-1">* 姓名</label>
-          <input type="text" required value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+          <input type="text" required value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="不可空白..."/>
         </div>
         <div className="flex-1"> 
           <label className="block text-xs font-bold text-slate-700 mb-1">* 郵箱(不可更改)</label>
@@ -96,7 +86,7 @@ export default function Personal() {
       <div className="flex gap-4"> {/* 使用 flex 讓子元素並排，gap-4 設定欄位間距 */}
         <div className="flex-1"> {/* flex-1 讓兩個欄位平分寬度 */}
           <label className="block text-xs font-bold text-slate-700 mb-1">暱稱</label>
-          <input type="text" value={userPersona} onChange={(e) => setUserPersona(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="留言功能還沒做..." />
+          <input type="text" value={userPersona} onChange={(e) => setUserPersona(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="留言功能才會用到..." />
         </div>
         <div className="flex-1"> 
           <label className="block text-xs font-bold text-slate-700 mb-1">聯絡電話</label>
