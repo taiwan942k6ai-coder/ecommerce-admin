@@ -42,6 +42,11 @@ export default function OpenNewStore() {
       setShowTooltip(!showTooltip); };
 
 
+        // 當陣列只有一個項目時，自動將 state 設為該項目的 ID
+  useEffect(() => {  if (storeTypeArray && storeTypeArray.length === 1) {
+      setNewStoreType(storeTypeArray[0].product_categories.category_id);
+    }  }, [storeTypeArray]);
+
   useEffect(()=>{ 
       // 1. 修正：定義非同步函式並記得在結尾加上 () 立即呼叫它
     const fetchData = async () => {
@@ -53,6 +58,7 @@ export default function OpenNewStore() {
         // .select('name,mkuid, mk_type, mk_type2, shop_types') 
         // .select('mk_name,mkuid,mk_type, market_categories(category_name), product_categories(category_name)') 
         .select('mk_name,mkuid,mk_type, market_categories(category_name), market_category_relations (product_categories (category_id,category_name))')
+        .eq('is_active',true)
         // .order('mk_name', { ascending: false }); // 按照 name 欄位排序
         if (error) {throw error;}
         // console.log("市集資料表撈出 data：", data);
@@ -146,7 +152,7 @@ export default function OpenNewStore() {
           </div>
 
           <div className="flex-1"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 市集名稱' : '* 商品中類' }</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 市集名稱' : '* 主商品型態' }</label>
             {/* <input type="text" required value={newStoreType} onChange={(e) => setNewStoreType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" /> */}
             <select required  value={newStoreMarket}
                 onChange={(e) => {setNewStoreMarket(e.target.value);setNewStoreType('');
@@ -171,21 +177,25 @@ export default function OpenNewStore() {
             <label className="block text-xs font-bold text-slate-700 mb-1">* 商店名稱</label>
             <input type="text" required value={newStoreName} onChange={(e) => setNewStoreName(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" placeholder="七字內，no特殊符號..."/>
           </div>
-          <div className="flex-1"> 
-            <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 主商品型態' : '* 主商品型態' }</label>
+
+          {newStoreMarketType === 'offline' && ( 
+          <div className="flex-1">  {/* 直接拿掉online的欄位 用useEffect帶值 */}
             {/* <input type="text" required value={newStoreType} onChange={(e) => setNewStoreType(e.target.value)} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" /> */}
+            <label className="block text-xs font-bold text-slate-700 mb-1">{ (newStoreMarketType === 'offline') ? '* 主商品型態' : '' }</label>
             <select required value={newStoreType}
                 onChange={(e) => setNewStoreType(e.target.value)}
                 className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none">
-            <option value="">請選擇型態...</option>
+            {/* <option value="">請選擇型態...</option> */}
             {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
             {/* {console.log("storeTypeArray：", storeTypeArray)} */}
+                {/* 只有當陣列長度「不是 1」時，才顯示「請選擇型態...」 */}
+            {storeTypeArray?.length !== 1 && (  <option value="">請選擇型態...</option>)}
             {storeTypeArray && storeTypeArray.map((type) => (
                 <option key={type.product_categories.category_id} value={type.product_categories.category_id}>
                     {type.product_categories.category_name}
                 </option>         ))}
             </select>
-          </div>
+          </div>)}
         </div>
 
         <div>

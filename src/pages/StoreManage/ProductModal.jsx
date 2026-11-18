@@ -68,10 +68,11 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
       uploadedImageUrl = publicUrl
       }
 
-
+console.log('storeUID:', storeUID)
       const { error } = await supabase
         .from('products')
-        .insert([{ spuid:storeUID, pd_name: newProdName, unit:newProdUnit, subcategory_id:newProdType, pd_introduce:'', have_stock:false, price_origin: parseFloat(newProdPrice), is_visible:false, is_active: true, image_url: uploadedImageUrl}])
+        .insert([{ spuid:storeUID, pd_name: newProdName, unit:newProdUnit, subcategory_id:newProdType, 
+                   price_origin: parseFloat(newProdPrice), image_url: uploadedImageUrl}])
       if (error) throw error
 
       alert('商品 '+newProdName+' 上架成功！')
@@ -131,10 +132,15 @@ export default function ProductModal({ isOpen, onClose, storeName, onUploaded, p
             <option value="">請選擇...</option>
             {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> 和 陣列解構Array Destructuring*/}
             { console.log("目前要測試的變數是111 productTypeArray：", productTypeArray)}
-            {Array.isArray(productTypeArray) && productTypeArray.map(({subcategory_id,subcategory_name}) => (
-                <option key={subcategory_id} value={subcategory_id}>
-                    {subcategory_name}
-                </option>         ))}
+            {Array.isArray(productTypeArray) && productTypeArray.map(({group_name,subcategory_id,subcategory_name}) => {
+                          const isDefault = subcategory_name === '不指定 / 其他';
+                          const displayText = isDefault
+                            ? (group_name || subcategory_name)
+                            : `${group_name ? `${group_name}_` : ''}${subcategory_name}`;
+
+    return(     <option key={subcategory_id} value={subcategory_id}>
+                      {displayText}
+                </option>         );})}
             </select>          
           </div>
         </div>

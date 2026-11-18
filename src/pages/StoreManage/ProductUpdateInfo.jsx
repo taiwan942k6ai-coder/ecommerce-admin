@@ -129,10 +129,15 @@ export default function ProductUpdateInfo({ storeName, isOpen, onClose, onUpdate
             <option value="">請選擇...</option>
             {/* 關鍵修改：使用 .map() 將陣列展開成多個 <option> */}
             {/* { console.log("目前要測試的變數是 productTypeArray：", productTypeArray)} */}
-                {Array.isArray(productTypeArray) && productTypeArray.map(({subcategory_id,subcategory_name}) => (
+                {/* {Array.isArray(productTypeArray) && productTypeArray.map(({subcategory_id,subcategory_name}) => (
                 <option key={subcategory_id} value={subcategory_id}>
                     {subcategory_name}
-                </option>         ))}
+                </option>         ))} */}
+            {Array.isArray(productTypeArray) && productTypeArray.map(({group_name,subcategory_id,subcategory_name}) => {
+              const isDefault = subcategory_name === '不指定 / 其他';
+              const displayText = isDefault ? (group_name || subcategory_name) : `${group_name ? `${group_name}_` : ''}${subcategory_name}`;
+
+    return( <option key={subcategory_id} value={subcategory_id}>  {displayText}  </option> );})}
             </select>          
           </div>
           <div className="flex-1">

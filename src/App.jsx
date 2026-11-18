@@ -20,7 +20,7 @@ function App() {
   <AuthProvider> {/* overflow-x-hidden 順便鎖死橫向，防止手機畫面左右亂晃 */}
     {/* <div className="min-h-dvh bg-slate-50 text-slate-900 font-sans overflow-x-hidden"> */}
   {/* <div className="w-screen h-[100dvh] overflow-hidden flex flex-col bg-slate-50 font-sans"> */}
-  <div className="w-screen h-[100dvh] flex flex-col bg-slate-50 font-sans overflow-hidden">
+  <div className="w-screen max-w-3xl mx-auto h-[100dvh] flex flex-col bg-slate-50 font-sans overflow-hidden">
     <Navbar />
     {/* <div className="flex-1 min-h-dvh bg-slate-50 text-slate-900 font-sans overflow-x-hidden overflow-y-auto"> */}
     <div className="flex-1 min-h-0 bg-slate-50 text-slate-900 overflow-y-auto flex flex-col justify-start">

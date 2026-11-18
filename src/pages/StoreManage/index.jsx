@@ -49,7 +49,7 @@ export default function StoreManage() {
 console.log("目前要測試的變數是  storeData", storeData);
 
       // const { data: productData } = await supabase.from('off_line_products').select('*').eq('spuid',storeData.spuid).eq('is_active',true).order('pdid', { ascending: false })
-      const { data: productData } = await supabase.from('products').select('pd_name, pd_introduce, pduid, price_origin, unit,subcategory_id,have_stock, image_url,spuid')
+      const { data: productData } = await supabase.from('products').select('pd_name, pd_introduce, pduid, price_origin, unit, subcategory_id, is_visible, have_stock, image_url,spuid')
       .eq('spuid',storeData.spuid).eq('is_active',true).order('created_at', { ascending: true })
       setProducts(productData || [])
 console.log("目前要測試的變數是  products為什麼會延遲", products);
@@ -62,9 +62,9 @@ console.log("目前要測試的變數是  productTypeData", productTypeData);
       setProductTypeArray(productTypeData || [])
       // setProductTypeArray(productTypeData.product_types || [])    寫錯了 寫成主商品型態 */
 
-      const { data: productTypeData } = await supabase.from('product_subcategories').select('subcategory_name,subcategory_id')
+      const { data: productTypeData } = await supabase.from('product_subcategories').select('group_name,subcategory_name,subcategory_id')
       .eq('category_id',storeData.shop_type)
-console.log("目前要測試的變數是  storeData.shoptype", storeData.shop_type);
+console.log("目前要測試的變數是  storeData.shoptype", storeData);
       setProductTypeArray(productTypeData || [])
 
       // console.log("目前要測試的變數是  { session }：", { session });//重新命名（Destructuring assignment with renaming）寫法，不存在變數 data

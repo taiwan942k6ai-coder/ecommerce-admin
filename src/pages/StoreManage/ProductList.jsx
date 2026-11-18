@@ -7,10 +7,10 @@ export default function ProductList({ storeName, products, setProducts, onAddCli
 
   const handleToggleActive = async (productId, currentStatus,productName) => {//is_active
     try {
-      const { error } = await supabase.from('products').update({ have_stock: !currentStatus }).eq('pduid', productId)
+      const { error } = await supabase.from('products').update({ is_visible: !currentStatus }).eq('pduid', productId)
       if (error) throw error
-      setProducts(products.map(p => p.pduid === productId ? { ...p, have_stock: !currentStatus } : p))
-      console.log(productName, "更新狀態:", currentStatus?"有銷售":"沒有賣");
+      setProducts(products.map(p => p.pduid === productId ? { ...p, is_visible: !currentStatus } : p))
+      console.log(productName, "更新狀態:", !currentStatus?"有銷售，user可以看到此商品":"已下架");
     } catch (error) {
       alert('切換狀態失敗：' + error.message)
     }
@@ -122,26 +122,7 @@ const handlePriceUpdate = async (products, newPrices) => {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">　商品清單</h2>
-        <span 
-          ref={tooltipRef}
-          className="relative inline-flex items-center justify-center w-3.5 h-3.5 ml-0.5 -mt-0.5 text-[10px] font-bold text-white bg-amber-400 rounded-full cursor-help select-none"
-          onMouseEnter={() => setShowTooltip(true)}  /* PC 滑鼠移入 */
-          onMouseLeave={() => setShowTooltip(false)} /* PC 滑鼠移出 */
-          onClick={handleIconClick}                  /* 📱 手機點擊觸發 */    >
-          ?   {/* 右上角小黃色問號圖標 */}
-          {showTooltip && (
-            // <div className="absolute bottom-[160%] left-1/2 -translate-x-1/2 z-50 px-3 py-2 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg whitespace-nowrap">
-              /* 修正後的提示文字浮動視窗：移除 left-1/2 和 -translate-x-1/2，改用 left-0 靠左對齊，並限制寬度與允許換行 */
-            <div className="absolute bottom-[160%] left-0 z-50 w-54 p-3 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg break-words">
-            點圖片、商品名 可更新商品資訊<br />更新售價 後，記得底部按存檔。    {/* 提示文字浮動視窗 */} {/* 提示框底部的小三角形箭頭 */}
-            {/* <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div> */}
-            {/* 修正後的小三角形箭頭：讓箭頭精準靠左對齊黃色問號 */}
-            <div className="absolute top-full left-1 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div>
-          </div>
-          )}
-        </span>
-        <span/> <span/>   
+        <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">　　　商品清單</h2>
         {/* <div className="flex-1 min-w-0 text-xs text-slate-600 break-words pt-1 md:pt-0 whitespace-pre-line">
           點圖片、商品名 可更新商品資訊{'\n'}更新售價，記得存檔 </div> */}
         <button onClick={onAddClick} className="rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-brand-700 active:scale-95 transition-all">+ 新增商品</button>
@@ -151,11 +132,28 @@ const handlePriceUpdate = async (products, newPrices) => {
         <div key="商品欄位" className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-xs space-x-2">
           {/* 1. 最左側：有銷售 (對齊 Checkbox 寬度) */}
           <div className="w-[44px] flex flex-shrink-0 items-center justify-center">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">有銷售</h2>
+            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">上架</h2>
           </div>
           {/* 2. 中間偏左：圖與商品名稱 (對齊圖片與名稱的 flex-1) */}
-          <div className="flex flex-1 items-center space-x-3 min-w-0 pl-1 justify-center">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">商品目前售價</h2>
+          <div className="flex flex-1 items-center space-x-1 min-w-0 pl-1 justify-center">
+            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">商品資訊和售價</h2>
+            <span   ref={tooltipRef}
+                    className="relative inline-flex items-center justify-center w-3.5 h-3.5 ml-0.5 -mt-0.5 text-[10px] font-bold text-white bg-amber-400 rounded-full cursor-help select-none"
+                    onMouseEnter={() => setShowTooltip(true)}  /* PC 滑鼠移入 */
+                    onMouseLeave={() => setShowTooltip(false)} /* PC 滑鼠移出 */
+                    onClick={handleIconClick}                  /* 📱 手機點擊觸發 */    >
+                    ?   {/* 右上角小黃色問號圖標 */}
+                    {showTooltip && (
+                      // <div className="absolute bottom-[160%] left-1/2 -translate-x-1/2 z-50 px-3 py-2 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg whitespace-nowrap">
+                        /* 修正後的提示文字浮動視窗：移除 left-1/2 和 -translate-x-1/2，改用 left-0 靠左對齊，並限制寬度與允許換行 */
+                      <div className="absolute bottom-[160%] left-0 z-50 w-54 p-3 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg break-words">
+                      點圖片、商品名 可更新商品資訊<br />更新 新售價，記得底部按存檔鈕。    {/* 提示文字浮動視窗 */} {/* 提示框底部的小三角形箭頭 */}
+                      {/* <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div> */}
+                      {/* 修正後的小三角形箭頭：讓箭頭精準靠左對齊黃色問號 */}
+                      <div className="absolute top-full left-1 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div>
+                    </div>
+                    )}
+                  </span>
           </div>
           {/* 3. 中間偏右：新售價 (對齊修改價格輸入框的寬度) */}
           <div className="w-[114px] flex flex-shrink-0 items-center justify-center">
@@ -182,14 +180,14 @@ const handlePriceUpdate = async (products, newPrices) => {
               <div className="flex flex-shrink-0 items-center pl-1">
                 <input
                   type="checkbox"
-                  checked={product.have_stock} 
-                  onChange={() => handleToggleActive(product.pduid, product.have_stock,product.pd_name)}
+                  checked={product.is_visible} 
+                  onChange={() => handleToggleActive(product.pduid, product.is_visible,product.pd_name)}
                   className="h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 cursor-pointer"
                 />
               </div>
 
               {/* 2. 中間偏左：圖片 + 商品名稱與目前價格 (維持上下顯示) */}
-              <div className="flex flex-1 items-center space-x-3 min-w-0">
+              <div className="flex flex-1 items-center space-x-3 min-w-0 ml-4">
                 <div onClick={() => { setSelectedProduct(product); onAddClick2();}} className="h-12 w-12 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100 cursor-pointer">
                 {/* <div className="h-12 w-12 flex-none rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 text-xs overflow-hidden border border-slate-100"> */}
                   {product.image_url ? (

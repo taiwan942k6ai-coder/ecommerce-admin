@@ -140,7 +140,7 @@ return (
             // <div className="absolute bottom-[160%] left-1/2 -translate-x-1/2 z-50 px-3 py-2 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg whitespace-nowrap">
               /* 修正後的提示文字浮動視窗：移除 left-1/2 和 -translate-x-1/2，改用 left-0 靠左對齊，並限制寬度與允許換行 */
             <div className="absolute bottom-[160%] left-0 z-50 w-64 p-3 text-xs font-normal leading-normal text-white bg-gray-800 rounded-md shadow-lg break-words">
-            目前不提供更換郵箱功能，若輸入錯誤，<br />可以註銷帳戶，再重新註冊新帳戶。    {/* 提示文字浮動視窗 */} {/* 提示框底部的小三角形箭頭 */}
+            目前不提供更換郵箱功能，若輸入錯誤，<br />可以註銷帳戶，再重新註冊新帳戶。 <br /><br />正規化測試   {/* 提示文字浮動視窗 */} {/* 提示框底部的小三角形箭頭 */}
             {/* <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div> */}
             {/* 修正後的小三角形箭頭：讓箭頭精準靠左對齊黃色問號 */}
             <div className="absolute top-full left-1 border-[5px] border-solid border-t-gray-800 border-x-transparent border-b-transparent"></div>
